@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000/api"
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080/api"
 
 export class ApiError extends Error {
   readonly status: number
@@ -28,7 +28,8 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     return undefined as T
   }
 
-  return (await response.json()) as T
+  const json = await response.json()
+  return (Object.prototype.hasOwnProperty.call(json, "data") ? json.data : json) as T
 }
 
 export const apiClient = {
