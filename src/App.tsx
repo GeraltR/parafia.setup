@@ -1,18 +1,38 @@
+import { lazy, Suspense } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 
 import { AppShell } from "@/components/layout/AppShell"
 import { navSections } from "@/lib/nav"
 import { ComingSoonPage } from "@/pages/ComingSoonPage"
-import { HeroPage } from "@/pages/HeroPage"
-import { ThemePage } from "@/pages/ThemePage"
+
+const ThemePage = lazy(() =>
+  import("@/pages/ThemePage").then((m) => ({ default: m.ThemePage }))
+)
+const HeroPage = lazy(() => import("@/pages/HeroPage").then((m) => ({ default: m.HeroPage })))
+
+const pageFallback = <p className="text-sm text-muted-foreground">Ładowanie…</p>
 
 function App() {
   return (
     <Routes>
       <Route element={<AppShell />}>
         <Route index element={<Navigate to="/theme" replace />} />
-        <Route path="/theme" element={<ThemePage />} />
-        <Route path="/hero" element={<HeroPage />} />
+        <Route
+          path="/theme"
+          element={
+            <Suspense fallback={pageFallback}>
+              <ThemePage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/hero"
+          element={
+            <Suspense fallback={pageFallback}>
+              <HeroPage />
+            </Suspense>
+          }
+        />
         {navSections
           .filter((section) => section.to !== "/theme" && section.to !== "/hero")
           .map((section) => (
