@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Trash2 } from "lucide-react"
-import { useFieldArray, useForm, type Control } from "react-hook-form"
+import { useFieldArray, useForm, type Control, type FieldPath } from "react-hook-form"
 import { z } from "zod"
 
 import { heroApi } from "@/api/hero"
@@ -37,6 +37,10 @@ const heroButtonSchema = z.object({
   href: z.string().min(1, "Wymagane"),
   icon: iconSchema,
   external: z.boolean().optional(),
+  textColor: z.string().nullable(),
+  textColorHover: z.string().nullable(),
+  bgColor: z.string().nullable(),
+  bgColorHover: z.string().nullable(),
 })
 
 const heroSchema = z.object({
@@ -44,10 +48,12 @@ const heroSchema = z.object({
   titleWidth: z.number().min(1).max(12),
   titleFont: z.string(),
   titleVAlign: vAlignSchema,
+  titleColor: z.string().nullable(),
   subtitle: z.string(),
   subtitleWidth: z.number().min(1).max(12),
   subtitleFont: z.string(),
   subtitleVAlign: vAlignSchema,
+  subtitleColor: z.string().nullable(),
   keynote: z.string(),
   keynoteWidth: z.number().min(1).max(12),
   keynoteFont: z.string(),
@@ -71,20 +77,75 @@ const ICON_LABELS: Record<z.infer<typeof iconSchema>, string> = {
 }
 
 const TEXT_BLOCK_FIELDS = {
-  title: { text: "title", width: "titleWidth", font: "titleFont", vAlign: "titleVAlign" },
+  title: {
+    text: "title",
+    width: "titleWidth",
+    font: "titleFont",
+    vAlign: "titleVAlign",
+    color: "titleColor",
+  },
   subtitle: {
     text: "subtitle",
     width: "subtitleWidth",
     font: "subtitleFont",
     vAlign: "subtitleVAlign",
+    color: "subtitleColor",
   },
   keynote: {
     text: "keynote",
     width: "keynoteWidth",
     font: "keynoteFont",
     vAlign: "keynoteVAlign",
+    color: null,
   },
 } as const
+
+function ColorField({
+  control,
+  name,
+  label,
+  fallback,
+}: {
+  control: Control<HeroFormValues>
+  name: FieldPath<HeroFormValues>
+  label: string
+  fallback: string
+}) {
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => {
+        const value = field.value as string | null
+        return (
+          <FormItem>
+            <FormLabel>{label}</FormLabel>
+            <div className="flex items-center gap-2">
+              <FormControl>
+                <Input
+                  type="color"
+                  className="h-8 w-14 shrink-0 p-1"
+                  value={value ?? fallback}
+                  onChange={(e) => field.onChange(e.target.value)}
+                />
+              </FormControl>
+              {value !== null && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => field.onChange(null)}
+                >
+                  Domyślny
+                </Button>
+              )}
+            </div>
+          </FormItem>
+        )
+      }}
+    />
+  )
+}
 
 function HeroTextBlock({
   control,
@@ -118,7 +179,7 @@ function HeroTextBlock({
           </FormItem>
         )}
       />
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-4 gap-4">
         <FormField
           control={control}
           name={fields.width}
@@ -178,6 +239,14 @@ function HeroTextBlock({
             </FormItem>
           )}
         />
+        {fields.color && (
+          <ColorField
+            control={control}
+            name={fields.color}
+            label="Kolor tekstu"
+            fallback="#ffffff"
+          />
+        )}
       </div>
     </div>
   )
@@ -263,6 +332,32 @@ function HeroButtonRow({
           <Trash2 />
         </Button>
       </div>
+      <div className="grid grid-cols-4 gap-4">
+        <ColorField
+          control={control}
+          name={`buttons.${index}.textColor`}
+          label="Tekst"
+          fallback="#ffffff"
+        />
+        <ColorField
+          control={control}
+          name={`buttons.${index}.bgColor`}
+          label="Tło"
+          fallback="#0a1428"
+        />
+        <ColorField
+          control={control}
+          name={`buttons.${index}.textColorHover`}
+          label="Tekst (hover)"
+          fallback="#0a1428"
+        />
+        <ColorField
+          control={control}
+          name={`buttons.${index}.bgColorHover`}
+          label="Tło (hover)"
+          fallback="#ffffff"
+        />
+      </div>
     </div>
   )
 }
@@ -281,10 +376,12 @@ export function HeroPage() {
       titleWidth: 12,
       titleFont: "",
       titleVAlign: "center",
+      titleColor: null,
       subtitle: "",
       subtitleWidth: 12,
       subtitleFont: "",
       subtitleVAlign: "center",
+      subtitleColor: null,
       keynote: "",
       keynoteWidth: 12,
       keynoteFont: "",
@@ -413,7 +510,16 @@ export function HeroPage() {
                   variant="outline"
                   size="sm"
                   onClick={() =>
-                    append({ label: "", href: "", icon: "mass", external: false })
+                    append({
+                      label: "",
+                      href: "",
+                      icon: "mass",
+                      external: false,
+                      textColor: null,
+                      textColorHover: null,
+                      bgColor: null,
+                      bgColorHover: null,
+                    })
                   }
                 >
                   Dodaj przycisk

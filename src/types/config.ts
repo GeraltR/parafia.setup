@@ -43,6 +43,10 @@ export interface HeroButton {
   href: string;
   icon: "mass" | "announcements" | "live";
   external?: boolean;
+  textColor: string | null;
+  textColorHover: string | null;
+  bgColor: string | null;
+  bgColorHover: string | null;
 }
 
 export interface Hero {
@@ -50,10 +54,12 @@ export interface Hero {
   titleWidth: number;
   titleFont: string;
   titleVAlign: VerticalAlign;
+  titleColor: string | null;
   subtitle: string;
   subtitleWidth: number;
   subtitleFont: string;
   subtitleVAlign: VerticalAlign;
+  subtitleColor: string | null;
   keynote: string;
   keynoteWidth: number;
   keynoteFont: string;
