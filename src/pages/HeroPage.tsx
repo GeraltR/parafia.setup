@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Trash2 } from "lucide-react"
 import { useFieldArray, useForm, type Control, type FieldPath } from "react-hook-form"
+import { HexColorPicker } from "react-colorful"
 import { z } from "zod"
 
 import { heroApi } from "@/api/hero"
@@ -17,6 +18,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import {
   Select,
   SelectContent,
@@ -27,6 +29,8 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+
+const HEX_COLOR_PATTERN = /^#[0-9a-fA-F]{6}$/
 
 const vAlignSchema = z.enum(["top", "center", "bottom"])
 const iconSchema = z.enum(["mass", "announcements", "live"])
@@ -117,29 +121,43 @@ function ColorField({
       name={name}
       render={({ field }) => {
         const value = field.value as string | null
+        const swatchValue = value && HEX_COLOR_PATTERN.test(value) ? value : fallback
         return (
           <FormItem>
             <FormLabel>{label}</FormLabel>
-            <div className="flex items-center gap-2">
+            <Popover>
               <FormControl>
-                <Input
-                  type="color"
-                  className="h-8 w-14 shrink-0 p-1"
-                  value={value ?? fallback}
-                  onChange={(e) => field.onChange(e.target.value)}
+                <PopoverTrigger
+                  type="button"
+                  className="h-8 w-10 shrink-0 rounded-md border border-input"
+                  style={{ backgroundColor: swatchValue }}
                 />
               </FormControl>
-              {value !== null && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => field.onChange(null)}
-                >
-                  Domyślny
-                </Button>
-              )}
-            </div>
+              <PopoverContent className="grid w-56 gap-3">
+                <HexColorPicker color={swatchValue} onChange={field.onChange} />
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="text"
+                    className="flex-1 font-mono"
+                    placeholder={fallback}
+                    value={value ?? ""}
+                    onChange={(e) =>
+                      field.onChange(e.target.value === "" ? null : e.target.value)
+                    }
+                  />
+                  {value !== null && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => field.onChange(null)}
+                    >
+                      Domyślny
+                    </Button>
+                  )}
+                </div>
+              </PopoverContent>
+            </Popover>
           </FormItem>
         )
       }}
@@ -191,6 +209,7 @@ function HeroTextBlock({
                   type="number"
                   min={1}
                   max={12}
+                  className="w-20"
                   name={field.name}
                   onBlur={field.onBlur}
                   ref={field.ref}
@@ -224,7 +243,9 @@ function HeroTextBlock({
               <Select value={field.value as string} onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue />
+                    <SelectValue>
+                      {(value: string) => V_ALIGN_LABELS[value as keyof typeof V_ALIGN_LABELS]}
+                    </SelectValue>
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -301,7 +322,9 @@ function HeroButtonRow({
               <Select value={field.value} onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue />
+                    <SelectValue>
+                      {(value: string) => ICON_LABELS[value as keyof typeof ICON_LABELS]}
+                    </SelectValue>
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
