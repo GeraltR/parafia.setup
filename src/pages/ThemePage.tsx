@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import { themeApi } from "@/api/theme"
+import { FontSelect } from "@/components/FontSelect"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -15,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useFonts } from "@/lib/fonts"
 
 const themeSchema = z.object({
   id: z.number(),
@@ -31,6 +33,7 @@ type ThemeFormValues = z.infer<typeof themeSchema>
 export function ThemePage() {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [saveError, setSaveError] = useState<string | null>(null)
+  const fonts = useFonts()
 
   const form = useForm<ThemeFormValues>({
     resolver: zodResolver(themeSchema),
@@ -142,9 +145,7 @@ export function ThemePage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Font nagłówków</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
+                    <FontSelect value={field.value} onChange={field.onChange} fonts={fonts} />
                     <FormMessage />
                   </FormItem>
                 )}
@@ -155,9 +156,7 @@ export function ThemePage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Font treści</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
+                    <FontSelect value={field.value} onChange={field.onChange} fonts={fonts} />
                     <FormMessage />
                   </FormItem>
                 )}

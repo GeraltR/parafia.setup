@@ -5,7 +5,9 @@ import { useFieldArray, useForm, type Control, type FieldPath } from "react-hook
 import { HexColorPicker } from "react-colorful"
 import { z } from "zod"
 
+import type { FontFamily } from "@/api/fonts"
 import { heroApi } from "@/api/hero"
+import { FontSelect } from "@/components/FontSelect"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -29,6 +31,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { useFonts } from "@/lib/fonts"
 
 const HEX_COLOR_PATTERN = /^#[0-9a-fA-F]{6}$/
 
@@ -170,11 +173,13 @@ function HeroTextBlock({
   prefix,
   label,
   multiline,
+  fonts,
 }: {
   control: Control<HeroFormValues>
   prefix: keyof typeof TEXT_BLOCK_FIELDS
   label: string
   multiline?: boolean
+  fonts: FontFamily[]
 }) {
   const fields = TEXT_BLOCK_FIELDS[prefix]
 
@@ -227,9 +232,12 @@ function HeroTextBlock({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Font</FormLabel>
-              <FormControl>
-                <Input {...field} value={field.value as string} placeholder="domyślny" />
-              </FormControl>
+              <FontSelect
+                value={field.value as string}
+                onChange={field.onChange}
+                fonts={fonts}
+                allowDefault
+              />
               <FormMessage />
             </FormItem>
           )}
@@ -391,6 +399,7 @@ export function HeroPage() {
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const fonts = useFonts()
 
   const form = useForm<HeroFormValues>({
     resolver: zodResolver(heroSchema),
@@ -514,12 +523,18 @@ export function HeroPage() {
 
             <Separator />
 
-            <HeroTextBlock control={form.control} prefix="title" label="Tytuł" />
-            <HeroTextBlock control={form.control} prefix="subtitle" label="Podtytuł" />
+            <HeroTextBlock control={form.control} prefix="title" label="Tytuł" fonts={fonts} />
+            <HeroTextBlock
+              control={form.control}
+              prefix="subtitle"
+              label="Podtytuł"
+              fonts={fonts}
+            />
             <HeroTextBlock
               control={form.control}
               prefix="keynote"
               label="Motto"
+              fonts={fonts}
               multiline
             />
 
