@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import { themeApi } from "@/api/theme"
+import { ColorField } from "@/components/ColorField"
 import { FontSelect } from "@/components/FontSelect"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -111,31 +112,19 @@ export function ThemePage() {
               )}
             />
             <div className="grid grid-cols-2 gap-4">
-              <FormField
+              <ColorField
                 control={form.control}
                 name="primaryColor"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Kolor podstawowy</FormLabel>
-                    <FormControl>
-                      <Input type="color" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Kolor podstawowy"
+                fallback="#1a365d"
+                allowClear={false}
               />
-              <FormField
+              <ColorField
                 control={form.control}
                 name="secondaryColor"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Kolor dodatkowy</FormLabel>
-                    <FormControl>
-                      <Input type="color" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Kolor dodatkowy"
+                fallback="#c9a84c"
+                allowClear={false}
               />
             </div>
             <div className="grid grid-cols-2 gap-4">

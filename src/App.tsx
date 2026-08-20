@@ -3,12 +3,14 @@ import { Navigate, Route, Routes } from "react-router-dom"
 
 import { AppShell } from "@/components/layout/AppShell"
 import { navSections } from "@/lib/nav"
-import { ComingSoonPage } from "@/pages/ComingSoonPage"
+import { ComingSoonPage } from "@/pages/ComingSoonPage/ComingSoonPage"
 
 const ThemePage = lazy(() =>
-  import("@/pages/ThemePage").then((m) => ({ default: m.ThemePage }))
+  import("@/pages/Theme/ThemePage").then((m) => ({ default: m.ThemePage }))
 )
-const HeroPage = lazy(() => import("@/pages/HeroPage").then((m) => ({ default: m.HeroPage })))
+const HeroPage = lazy(() =>
+  import("@/pages/Hero/HeroPage").then((m) => ({ default: m.HeroPage }))
+)
 
 const pageFallback = <p className="text-sm text-muted-foreground">Ładowanie…</p>
 
