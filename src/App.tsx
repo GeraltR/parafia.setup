@@ -3,8 +3,9 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom"
 
 import { AppShell } from "@/components/layout/AppShell"
 import { AuthProvider } from "@/context/AuthProvider"
+import { ThemeProvider } from "@/context/ThemeProvider"
 import { useAuth } from "@/context/useAuth"
-import { navSections } from "@/lib/nav"
+import { allNavLinks } from "@/lib/nav"
 import { ComingSoonPage } from "@/pages/ComingSoonPage/ComingSoonPage"
 import { LoginPage } from "@/pages/Login/LoginPage"
 
@@ -38,45 +39,47 @@ function RequireAuth({ children }: { children: ReactNode }) {
 
 function App() {
   return (
-    <AuthProvider>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route
-          element={
-            <RequireAuth>
-              <AppShell />
-            </RequireAuth>
-          }
-        >
-          <Route index element={<Navigate to="/theme" replace />} />
+    <ThemeProvider>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
           <Route
-            path="/theme"
             element={
-              <Suspense fallback={pageFallback}>
-                <ThemePage />
-              </Suspense>
+              <RequireAuth>
+                <AppShell />
+              </RequireAuth>
             }
-          />
-          <Route
-            path="/hero"
-            element={
-              <Suspense fallback={pageFallback}>
-                <HeroPage />
-              </Suspense>
-            }
-          />
-          {navSections
-            .filter((section) => section.to !== "/theme" && section.to !== "/hero")
-            .map((section) => (
-              <Route
-                key={section.to}
-                path={section.to}
-                element={<ComingSoonPage title={section.label} />}
-              />
-            ))}
-        </Route>
-      </Routes>
-    </AuthProvider>
+          >
+            <Route index element={<Navigate to="/theme" replace />} />
+            <Route
+              path="/theme"
+              element={
+                <Suspense fallback={pageFallback}>
+                  <ThemePage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/hero"
+              element={
+                <Suspense fallback={pageFallback}>
+                  <HeroPage />
+                </Suspense>
+              }
+            />
+            {allNavLinks
+              .filter((link) => link.to !== "/theme" && link.to !== "/hero")
+              .map((link) => (
+                <Route
+                  key={link.to}
+                  path={link.to}
+                  element={<ComingSoonPage title={link.label} />}
+                />
+              ))}
+          </Route>
+        </Routes>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }
 

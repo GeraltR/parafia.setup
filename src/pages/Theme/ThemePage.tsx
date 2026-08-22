@@ -34,7 +34,7 @@ type ThemeFormValues = z.infer<typeof themeSchema>
 
 export function ThemePage() {
   const { user } = useAuth()
-  const canWrite = user?.canWrite ?? false
+  const canWrite = user?.canWrite.site ?? false
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [saveError, setSaveError] = useState<string | null>(null)
   const fonts = useFonts()

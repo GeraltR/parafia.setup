@@ -1,9 +1,11 @@
 import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Eye, EyeOff } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { Navigate, useLocation, useNavigate } from "react-router-dom"
 import { z } from "zod"
 
+import { ThemeToggle } from "@/components/ThemeToggle"
 import { useAuth } from "@/context/useAuth"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -30,6 +32,7 @@ export function LoginPage() {
   const location = useLocation()
   const [loginError, setLoginError] = useState<string | null>(null)
   const [showForgotPasswordHint, setShowForgotPasswordHint] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -52,7 +55,10 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted/30 p-6">
+    <div className="relative flex min-h-svh flex-col items-center justify-center gap-6 bg-muted/30 p-6">
+      <div className="absolute top-6 right-6">
+        <ThemeToggle />
+      </div>
       <img
         src="/img/elzbieta_czysta.jpg"
         alt="Święta Elżbieta Węgierska"
@@ -85,7 +91,22 @@ export function LoginPage() {
                   <FormItem>
                     <FormLabel>Hasło</FormLabel>
                     <FormControl>
-                      <Input type="password" autoComplete="current-password" {...field} />
+                      <div className="relative">
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          autoComplete="current-password"
+                          className="pr-9"
+                          {...field}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword((prev) => !prev)}
+                          className="absolute inset-y-0 right-0 flex w-9 items-center justify-center text-muted-foreground hover:text-foreground"
+                          aria-label={showPassword ? "Ukryj hasło" : "Pokaż hasło"}
+                        >
+                          {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                        </button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
