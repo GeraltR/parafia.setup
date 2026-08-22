@@ -8,6 +8,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
+import { useAuth } from "@/context/useAuth"
 import { useFonts } from "@/lib/fonts"
 
 import { HeroButtonRow } from "./HeroButtonRow"
@@ -15,6 +16,8 @@ import { HeroTextBlock } from "./HeroTextBlock"
 import { heroSchema, type HeroFormValues } from "./schema"
 
 export function HeroPage() {
+  const { user } = useAuth()
+  const canWrite = user?.canWrite ?? false
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [saveError, setSaveError] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
@@ -123,7 +126,7 @@ export function HeroPage() {
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
-                  disabled={uploading}
+                  disabled={uploading || !canWrite}
                   className="text-sm file:mr-3 file:h-8 file:cursor-pointer file:rounded-lg file:border-0 file:bg-primary file:px-2.5 file:text-sm file:font-medium file:text-primary-foreground"
                 />
                 {uploading && (
@@ -195,9 +198,17 @@ export function HeroPage() {
             </div>
           </CardContent>
           <CardFooter className="flex items-center gap-3">
-            <Button type="submit" disabled={form.formState.isSubmitting || uploading}>
+            <Button
+              type="submit"
+              disabled={!canWrite || form.formState.isSubmitting || uploading}
+            >
               {form.formState.isSubmitting ? "Zapisywanie…" : "Zapisz"}
             </Button>
+            {!canWrite && (
+              <span className="text-sm text-muted-foreground">
+                Brak uprawnień do zapisywania zmian.
+              </span>
+            )}
             {saveError && <span className="text-sm text-destructive">{saveError}</span>}
             {form.formState.isSubmitSuccessful && !saveError && (
               <span className="text-sm text-muted-foreground">Zapisano.</span>

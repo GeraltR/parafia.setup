@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useAuth } from "@/context/useAuth"
 import { useFonts } from "@/lib/fonts"
 
 const themeSchema = z.object({
@@ -32,6 +33,8 @@ const themeSchema = z.object({
 type ThemeFormValues = z.infer<typeof themeSchema>
 
 export function ThemePage() {
+  const { user } = useAuth()
+  const canWrite = user?.canWrite ?? false
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [saveError, setSaveError] = useState<string | null>(null)
   const fonts = useFonts()
@@ -153,9 +156,14 @@ export function ThemePage() {
             </div>
           </CardContent>
           <CardFooter className="flex items-center gap-3">
-            <Button type="submit" disabled={form.formState.isSubmitting}>
+            <Button type="submit" disabled={!canWrite || form.formState.isSubmitting}>
               {form.formState.isSubmitting ? "Zapisywanie…" : "Zapisz"}
             </Button>
+            {!canWrite && (
+              <span className="text-sm text-muted-foreground">
+                Brak uprawnień do zapisywania zmian.
+              </span>
+            )}
             {saveError && <span className="text-sm text-destructive">{saveError}</span>}
             {form.formState.isSubmitSuccessful && !saveError && (
               <span className="text-sm text-muted-foreground">Zapisano.</span>

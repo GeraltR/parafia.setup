@@ -1,4 +1,20 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080/api"
+const TOKEN_STORAGE_KEY = "parafiasetup_token"
+
+let authToken: string | null = localStorage.getItem(TOKEN_STORAGE_KEY)
+
+export function setAuthToken(token: string | null) {
+  authToken = token
+  if (token) {
+    localStorage.setItem(TOKEN_STORAGE_KEY, token)
+  } else {
+    localStorage.removeItem(TOKEN_STORAGE_KEY)
+  }
+}
+
+export function getAuthToken() {
+  return authToken
+}
 
 export class ApiError extends Error {
   readonly status: number
@@ -17,6 +33,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     headers: {
       Accept: "application/json",
       ...(init?.body && !isFormData ? { "Content-Type": "application/json" } : {}),
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
       ...init?.headers,
     },
     ...init,
