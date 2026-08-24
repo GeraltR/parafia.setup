@@ -15,6 +15,9 @@ const ThemePage = lazy(() =>
 const HeroPage = lazy(() =>
   import("@/pages/Hero/HeroPage").then((m) => ({ default: m.HeroPage }))
 )
+const UsersPage = lazy(() =>
+  import("@/pages/Users/UsersPage").then((m) => ({ default: m.UsersPage }))
+)
 
 const pageFallback = <p className="text-sm text-muted-foreground">Ładowanie…</p>
 
@@ -67,8 +70,16 @@ function App() {
                 </Suspense>
               }
             />
+            <Route
+              path="/users"
+              element={
+                <Suspense fallback={pageFallback}>
+                  <UsersPage />
+                </Suspense>
+              }
+            />
             {allNavLinks
-              .filter((link) => link.to !== "/theme" && link.to !== "/hero")
+              .filter((link) => link.to !== "/theme" && link.to !== "/hero" && link.to !== "/users")
               .map((link) => (
                 <Route
                   key={link.to}
