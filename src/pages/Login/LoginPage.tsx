@@ -2,12 +2,12 @@ import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Eye, EyeOff } from "lucide-react"
 import { useForm } from "react-hook-form"
-import { Navigate, useLocation, useNavigate } from "react-router-dom"
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom"
 import { z } from "zod"
 
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { useAuth } from "@/context/useAuth"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Form,
@@ -31,7 +31,6 @@ export function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const [loginError, setLoginError] = useState<string | null>(null)
-  const [showForgotPasswordHint, setShowForgotPasswordHint] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
   const form = useForm<LoginFormValues>({
@@ -118,19 +117,12 @@ export function LoginPage() {
               <Button type="submit" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting ? "Logowanie…" : "Zaloguj"}
               </Button>
-              <Button
-                type="button"
-                variant="link"
-                className="justify-center"
-                onClick={() => setShowForgotPasswordHint(true)}
+              <Link
+                to="/forgot-password"
+                className={buttonVariants({ variant: "link", className: "justify-center" })}
               >
                 Zapomniałem hasła
-              </Button>
-              {showForgotPasswordHint && (
-                <p className="text-center text-sm text-muted-foreground">
-                  Skontaktuj się z administratorem, aby zresetować hasło.
-                </p>
-              )}
+              </Link>
             </CardFooter>
           </form>
         </Form>

@@ -7,7 +7,9 @@ import { ThemeProvider } from "@/context/ThemeProvider"
 import { useAuth } from "@/context/useAuth"
 import { allNavLinks } from "@/lib/nav"
 import { ComingSoonPage } from "@/pages/ComingSoonPage/ComingSoonPage"
+import { ForgotPasswordPage } from "@/pages/Login/ForgotPasswordPage"
 import { LoginPage } from "@/pages/Login/LoginPage"
+import { ResetPasswordPage } from "@/pages/Login/ResetPasswordPage"
 
 const ThemePage = lazy(() =>
   import("@/pages/Theme/ThemePage").then((m) => ({ default: m.ThemePage }))
@@ -46,6 +48,8 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route
             element={
               <RequireAuth>

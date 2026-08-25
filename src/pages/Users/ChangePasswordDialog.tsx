@@ -21,6 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { PASSWORD_REQUIREMENTS_HINT } from "@/lib/passwordValidation"
 import type { AuthUser } from "@/types/auth"
 
 import { changePasswordSchema, type ChangePasswordFormValues } from "./schema"
@@ -68,10 +69,7 @@ export function ChangePasswordDialog({
                   <FormControl>
                     <Input type="password" autoComplete="new-password" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Co najmniej 12 znaków, zawierające małe i duże litery, co najmniej jedną
-                    cyfrę i znak specjalny.
-                  </FormDescription>
+                  <FormDescription>{PASSWORD_REQUIREMENTS_HINT}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

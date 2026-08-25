@@ -28,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { PASSWORD_REQUIREMENTS_HINT } from "@/lib/passwordValidation"
 import { PERMISSION_LEVEL_OPTIONS } from "@/lib/permissionLevels"
 import type { AuthUser } from "@/types/auth"
 
@@ -106,10 +107,7 @@ export function AddUserDialog({
                   <FormControl>
                     <Input type="password" autoComplete="new-password" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Co najmniej 12 znaków, zawierające małe i duże litery, co najmniej jedną
-                    cyfrę i znak specjalny.
-                  </FormDescription>
+                  <FormDescription>{PASSWORD_REQUIREMENTS_HINT}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
