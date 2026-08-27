@@ -27,6 +27,9 @@ export const navGroups: NavGroup[] = [
       { to: "/news", label: "Aktualności" },
       { to: "/mass-intentions", label: "Intencje mszalne" },
       { to: "/info-extra", label: "Informacje" },
+      { to: "/sakramenty", label: "Sakramenty" },
+      { to: "/parafia", label: "Parafia" },
+      { to: "/liturgia", label: "Liturgia" },
     ],
   },
   {

@@ -1,0 +1,93 @@
+.content-editor,
+.rich-content {
+  line-height: 1.65;
+}
+
+.content-editor :first-child,
+.rich-content :first-child {
+  margin-top: 0;
+}
+
+.content-editor p,
+.rich-content p {
+  margin: 0.75em 0;
+}
+
+.content-editor h1,
+.rich-content h1 {
+  font-size: 1.75em;
+  font-weight: 700;
+  margin: 1em 0 0.5em;
+}
+
+.content-editor h2,
+.rich-content h2 {
+  font-size: 1.4em;
+  font-weight: 700;
+  margin: 1em 0 0.5em;
+}
+
+.content-editor h3,
+.rich-content h3 {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin: 1em 0 0.5em;
+}
+
+.content-editor ul,
+.rich-content ul {
+  list-style: disc;
+  padding-left: 1.5em;
+  margin: 0.75em 0;
+}
+
+.content-editor ol,
+.rich-content ol {
+  list-style: decimal;
+  padding-left: 1.5em;
+  margin: 0.75em 0;
+}
+
+.content-editor blockquote,
+.rich-content blockquote {
+  border-left: 3px solid currentColor;
+  opacity: 0.85;
+  padding-left: 1em;
+  margin: 1em 0;
+}
+
+.content-editor img,
+.rich-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+.content-editor a,
+.rich-content a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.content-editor table,
+.rich-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+
+.content-editor th,
+.content-editor td,
+.rich-content th,
+.rich-content td {
+  border: 1px solid currentColor;
+  border-opacity: 0.2;
+  padding: 0.4em 0.6em;
+  text-align: left;
+}
+
+.content-editor th,
+.rich-content th {
+  background: rgba(127, 127, 127, 0.1);
+  font-weight: 700;
+}

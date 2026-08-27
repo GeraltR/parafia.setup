@@ -23,6 +23,9 @@ const UsersPage = lazy(() =>
 const NavbarPage = lazy(() =>
   import("@/pages/Navbar/NavbarPage").then((m) => ({ default: m.NavbarPage }))
 )
+const ContentTopicsPage = lazy(() =>
+  import("@/pages/ContentTopics/ContentTopicsPage").then((m) => ({ default: m.ContentTopicsPage }))
+)
 
 const pageFallback = <p className="text-sm text-muted-foreground">Ładowanie…</p>
 
@@ -93,13 +96,42 @@ function App() {
                 </Suspense>
               }
             />
+            <Route
+              path="/sakramenty"
+              element={
+                <Suspense fallback={pageFallback}>
+                  <ContentTopicsPage page="sakramenty" title="Sakramenty" maxTopics={4} />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/parafia"
+              element={
+                <Suspense fallback={pageFallback}>
+                  <ContentTopicsPage page="parafia" title="Parafia" />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/liturgia"
+              element={
+                <Suspense fallback={pageFallback}>
+                  <ContentTopicsPage page="liturgia" title="Liturgia" />
+                </Suspense>
+              }
+            />
             {allNavLinks
               .filter(
                 (link) =>
-                  link.to !== "/theme" &&
-                  link.to !== "/hero" &&
-                  link.to !== "/users" &&
-                  link.to !== "/navbar"
+                  ![
+                    "/theme",
+                    "/hero",
+                    "/users",
+                    "/navbar",
+                    "/sakramenty",
+                    "/parafia",
+                    "/liturgia",
+                  ].includes(link.to)
               )
               .map((link) => (
                 <Route

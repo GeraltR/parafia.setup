@@ -152,3 +152,21 @@ export interface FooterConfig {
   legalLinks: FooterLegalLink[];
   copyrightText: string;
 }
+
+export type ContentPageSlug = "sakramenty" | "parafia" | "liturgia";
+
+export interface ContentTopicAuthor {
+  id: number;
+  name: string;
+}
+
+export interface ContentTopic {
+  id: number;
+  page: ContentPageSlug;
+  iconUrl: string | null;
+  title: string;
+  content: string;
+  visibleFrom: string | null;
+  order: number;
+  author?: ContentTopicAuthor | null;
+}
