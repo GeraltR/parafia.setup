@@ -24,6 +24,7 @@ export function TopicList({
   onDelete: (topic: ContentTopic) => void
 }) {
   const canPrint = page !== "sakramenty"
+  const showMeta = page !== "sakramenty"
   const canAddMore = maxTopics === undefined || topics.length < maxTopics
 
   return (
@@ -47,11 +48,13 @@ export function TopicList({
             <TopicIcon iconUrl={topic.iconUrl} className="size-10 shrink-0 text-muted-foreground" />
             <div className="min-w-0 flex-1">
               <p className="truncate font-medium">{topic.title}</p>
-              <p className="truncate text-sm text-muted-foreground">
-                {topic.author?.name ?? "Brak autora"}
-                {topic.visibleFrom &&
-                  ` · widoczna od ${new Date(topic.visibleFrom).toLocaleString("pl-PL")}`}
-              </p>
+              {showMeta && (
+                <p className="truncate text-sm text-muted-foreground">
+                  {topic.author?.name ?? "Brak autora"}
+                  {topic.visibleFrom &&
+                    ` · widoczna od ${new Date(topic.visibleFrom).toLocaleString("pl-PL")}`}
+                </p>
+              )}
             </div>
             <div className="flex gap-2">
               {canPrint && (

@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select"
 import { useAuth } from "@/context/useAuth"
 import type { AuthUser } from "@/types/auth"
-import type { ContentTopic } from "@/types/config"
+import type { ContentPageSlug, ContentTopic } from "@/types/config"
 
 import {
   datetimeLocalToIso,
@@ -35,15 +35,18 @@ import {
 } from "./schema"
 
 export function TopicEditor({
+  page,
   topic,
   onPublish,
   onCancel,
 }: {
+  page: ContentPageSlug
   topic: ContentTopic | null
   onPublish: (values: TopicFormValues) => Promise<void>
   onCancel: () => void
 }) {
   const { user } = useAuth()
+  const showScheduling = page !== "sakramenty"
   const [users, setUsers] = useState<AuthUser[]>([])
   const [error, setError] = useState<string | null>(null)
   const [uploadingIcon, setUploadingIcon] = useState(false)
@@ -56,7 +59,7 @@ export function TopicEditor({
       iconUrl: topic?.iconUrl ?? null,
       title: topic?.title ?? "",
       content: topic?.content ?? "",
-      visibleFrom: topic?.visibleFrom ?? new Date().toISOString(),
+      visibleFrom: topic?.visibleFrom ?? (showScheduling ? new Date().toISOString() : null),
       authorId: topic?.author?.id ?? user?.id ?? 0,
     },
   })
@@ -152,52 +155,54 @@ export function TopicEditor({
               )}
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="visibleFrom"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Widoczna od</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="datetime-local"
-                      value={isoToDatetimeLocal(field.value)}
-                      onChange={(e) => field.onChange(datetimeLocalToIso(e.target.value))}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="authorId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Autor</FormLabel>
-                  <Select
-                    value={String(field.value)}
-                    onValueChange={(value) => field.onChange(Number(value))}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue>
-                        {(value: string) => users.find((u) => String(u.id) === value)?.name ?? ""}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      {users.map((u) => (
-                        <SelectItem key={u.id} value={String(u.id)}>
-                          {u.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          {showScheduling && (
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="visibleFrom"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Widoczna od</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="datetime-local"
+                        value={isoToDatetimeLocal(field.value)}
+                        onChange={(e) => field.onChange(datetimeLocalToIso(e.target.value))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="authorId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Autor</FormLabel>
+                    <Select
+                      value={String(field.value)}
+                      onValueChange={(value) => field.onChange(Number(value))}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue>
+                          {(value: string) => users.find((u) => String(u.id) === value)?.name ?? ""}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {users.map((u) => (
+                          <SelectItem key={u.id} value={String(u.id)}>
+                            {u.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          )}
           <FormField
             control={form.control}
             name="content"

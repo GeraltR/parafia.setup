@@ -100,7 +100,7 @@ function App() {
               path="/sakramenty"
               element={
                 <Suspense fallback={pageFallback}>
-                  <ContentTopicsPage page="sakramenty" title="Sakramenty" maxTopics={4} />
+                  <ContentTopicsPage page="sakramenty" title="Sakramenty" maxTopics={7} />
                 </Suspense>
               }
             />

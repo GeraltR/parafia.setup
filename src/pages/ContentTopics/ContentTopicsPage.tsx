@@ -95,6 +95,7 @@ export function ContentTopicsPage({
         />
       ) : (
         <TopicEditor
+          page={page}
           topic={mode.type === "edit" ? mode.topic : null}
           onPublish={handlePublish}
           onCancel={() => setMode({ type: "list" })}
