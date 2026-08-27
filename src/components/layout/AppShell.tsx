@@ -10,7 +10,7 @@ export function AppShell() {
   const { user, logout } = useAuth()
 
   return (
-    <div className="flex min-h-svh">
+    <div className="flex h-svh">
       <aside className="flex w-56 shrink-0 flex-col border-r bg-sidebar text-sidebar-foreground">
         <div className="px-4 py-4 font-heading text-base font-semibold">
           Parafia — panel

@@ -105,7 +105,7 @@ export function HeroPage() {
   }
 
   return (
-    <Card className="max-w-3xl">
+    <Card className="max-w-3xl overflow-visible">
       <CardHeader>
         <CardTitle>Sekcja Hero</CardTitle>
       </CardHeader>
@@ -197,7 +197,7 @@ export function HeroPage() {
               ))}
             </div>
           </CardContent>
-          <CardFooter className="flex items-center gap-3">
+          <CardFooter className="sticky bottom-0 flex items-center gap-3 bg-muted shadow-[0_-2px_8px_rgba(0,0,0,0.06)]">
             <Button
               type="submit"
               disabled={!canWrite || form.formState.isSubmitting || uploading}

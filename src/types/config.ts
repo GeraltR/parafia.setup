@@ -72,6 +72,9 @@ export interface NavItem {
   id: number;
   label: string;
   href: string;
+  isLocked: boolean;
+  // Only present on top-level items; the API supports a single nesting level.
+  children?: NavItem[];
 }
 
 export interface Navbar {

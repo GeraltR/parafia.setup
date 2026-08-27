@@ -81,7 +81,7 @@ export function ThemePage() {
   }
 
   return (
-    <Card className="max-w-xl">
+    <Card className="max-w-xl overflow-visible">
       <CardHeader>
         <CardTitle>Motyw strony</CardTitle>
       </CardHeader>
@@ -155,7 +155,7 @@ export function ThemePage() {
               />
             </div>
           </CardContent>
-          <CardFooter className="flex items-center gap-3">
+          <CardFooter className="sticky bottom-0 flex items-center gap-3 bg-muted shadow-[0_-2px_8px_rgba(0,0,0,0.06)]">
             <Button type="submit" disabled={!canWrite || form.formState.isSubmitting}>
               {form.formState.isSubmitting ? "Zapisywanie…" : "Zapisz"}
             </Button>
