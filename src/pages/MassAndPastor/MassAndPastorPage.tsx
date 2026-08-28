@@ -34,6 +34,7 @@ function toFormValues(data: MassAndPastorData): MassAndPastorFormValues {
       fullName: p.fullName,
       photoUrl: p.photoUrl,
       duties: p.duties,
+      isActive: p.isActive,
     })),
   }
 }
@@ -211,7 +212,13 @@ export function MassAndPastorPage() {
                   variant="outline"
                   size="sm"
                   onClick={() =>
-                    pastorsArray.append({ position: "", fullName: "", photoUrl: null, duties: "" })
+                    pastorsArray.append({
+                      position: "",
+                      fullName: "",
+                      photoUrl: null,
+                      duties: "",
+                      isActive: true,
+                    })
                   }
                 >
                   <Plus /> Dodaj duszpasterza

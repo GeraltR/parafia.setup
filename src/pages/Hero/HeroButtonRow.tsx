@@ -33,7 +33,7 @@ export function HeroButtonRow({
   onRemove: () => void
 }) {
   return (
-    <div className="grid gap-4 rounded-lg border p-4">
+    <div className={`grid gap-4 rounded-lg border p-4 ${index % 2 === 1 ? "bg-muted/40" : ""}`}>
       <div className="grid grid-cols-2 gap-4">
         <FormField
           control={control}

@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 
 import type { MassAndPastorFormValues } from "./schema"
 
@@ -31,8 +32,8 @@ export function PastorRow({
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   return (
-    <div className="grid gap-4 rounded-lg border p-4">
-      <div className="grid grid-cols-2 gap-4">
+    <div className={`grid gap-4 rounded-lg border p-4 ${index % 2 === 1 ? "bg-muted/40" : ""}`}>
+      <div className="grid grid-cols-[1fr_1fr_auto] items-end gap-4">
         <FormField
           control={control}
           name={`pastors.${index}.position`}
@@ -56,6 +57,16 @@ export function PastorRow({
                 <Input placeholder="ks. Jan Kowalski" {...field} />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name={`pastors.${index}.isActive`}
+          render={({ field }) => (
+            <FormItem className="flex items-center gap-2 space-y-0 pb-2">
+              <Switch checked={field.value} onCheckedChange={field.onChange} />
+              <FormLabel className="!mt-0">Aktywny</FormLabel>
             </FormItem>
           )}
         />

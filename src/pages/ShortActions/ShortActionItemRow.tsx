@@ -27,7 +27,7 @@ export function ShortActionItemRow({
   const { field: iconUrlField } = useController({ control, name: `items.${index}.iconUrl` })
 
   return (
-    <div className="grid gap-4 rounded-lg border p-4">
+    <div className={`grid gap-4 rounded-lg border p-4 ${index % 2 === 1 ? "bg-muted/40" : ""}`}>
       <div className="flex items-start gap-4">
         <div className="grid gap-2">
           <Label>Ikona</Label>

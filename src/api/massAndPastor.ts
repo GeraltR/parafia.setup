@@ -22,6 +22,7 @@ export interface MassAndPastorPayload {
     fullName: string
     photoUrl: string | null
     duties: string
+    isActive: boolean
   }>
 }
 

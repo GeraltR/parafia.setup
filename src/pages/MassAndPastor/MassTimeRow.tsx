@@ -23,7 +23,7 @@ export function MassTimeRow({
   onRemove: () => void
 }) {
   return (
-    <div className="grid gap-3 rounded-lg border p-3">
+    <div className={`grid gap-3 rounded-lg border p-3 ${index % 2 === 1 ? "bg-muted/40" : ""}`}>
       <div className="flex items-end gap-3">
         <FormField
           control={control}

@@ -13,6 +13,7 @@ export const pastorSchema = z.object({
   fullName: z.string().min(1, "Wymagane"),
   photoUrl: z.string().nullable(),
   duties: z.string(),
+  isActive: z.boolean(),
 })
 
 export const massAndPastorSchema = z.object({

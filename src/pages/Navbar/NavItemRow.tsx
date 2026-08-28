@@ -35,7 +35,7 @@ export function NavItemRow({
   })
 
   return (
-    <div className="grid gap-4 rounded-lg border p-4">
+    <div className={`grid gap-4 rounded-lg border p-4 ${index % 2 === 1 ? "bg-muted/40" : ""}`}>
       <div className="flex items-end gap-4">
         <FormField
           control={control}
@@ -82,7 +82,10 @@ export function NavItemRow({
 
       <div className="grid gap-3 border-l-2 pl-4">
         {fields.map((childField, childIndex) => (
-          <div key={childField.id} className="flex items-end gap-4">
+          <div
+            key={childField.id}
+            className={`flex items-end gap-4 rounded-md p-2 ${childIndex % 2 === 1 ? "bg-muted/40" : ""}`}
+          >
             <FormField
               control={control}
               name={`items.${index}.children.${childIndex}.label`}

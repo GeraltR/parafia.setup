@@ -204,6 +204,7 @@ export interface Pastor {
   photoUrl: string | null;
   duties: string;
   order: number;
+  isActive: boolean;
 }
 
 export interface MassAndPastorData {
