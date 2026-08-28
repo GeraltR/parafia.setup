@@ -26,6 +26,15 @@ const NavbarPage = lazy(() =>
 const ContentTopicsPage = lazy(() =>
   import("@/pages/ContentTopics/ContentTopicsPage").then((m) => ({ default: m.ContentTopicsPage }))
 )
+const ShortActionsPage = lazy(() =>
+  import("@/pages/ShortActions/ShortActionsPage").then((m) => ({ default: m.ShortActionsPage }))
+)
+const MassAndPastorPage = lazy(() =>
+  import("@/pages/MassAndPastor/MassAndPastorPage").then((m) => ({ default: m.MassAndPastorPage }))
+)
+const AssociationsPage = lazy(() =>
+  import("@/pages/Associations/AssociationsPage").then((m) => ({ default: m.AssociationsPage }))
+)
 
 const pageFallback = <p className="text-sm text-muted-foreground">Ładowanie…</p>
 
@@ -120,6 +129,30 @@ function App() {
                 </Suspense>
               }
             />
+            <Route
+              path="/short-actions"
+              element={
+                <Suspense fallback={pageFallback}>
+                  <ShortActionsPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/mass-and-pastor"
+              element={
+                <Suspense fallback={pageFallback}>
+                  <MassAndPastorPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/associations"
+              element={
+                <Suspense fallback={pageFallback}>
+                  <AssociationsPage />
+                </Suspense>
+              }
+            />
             {allNavLinks
               .filter(
                 (link) =>
@@ -131,6 +164,9 @@ function App() {
                     "/sakramenty",
                     "/parafia",
                     "/liturgia",
+                    "/short-actions",
+                    "/mass-and-pastor",
+                    "/associations",
                   ].includes(link.to)
               )
               .map((link) => (

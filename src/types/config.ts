@@ -81,21 +81,30 @@ export interface Navbar {
   items: NavItem[];
 }
 
-export type ShortActionIcon =
-  | "mass"
-  | "sacraments"
-  | "announcements"
-  | "office"
-  | "media"
-  | "contact";
-
 export interface ShortActionItem {
   id: number;
-  icon: ShortActionIcon;
+  icon: string | null;
+  iconUrl: string | null;
   title: string;
   description: string;
   href: string;
   external?: boolean;
+}
+
+export interface ShortActionsConfig {
+  titleFont: string | null;
+  titleSize: string | null;
+  titleColor: string | null;
+  subtitleFont: string | null;
+  subtitleSize: string | null;
+  subtitleColor: string | null;
+  bgColor: string | null;
+  bgColorHover: string | null;
+}
+
+export interface ShortActionsData {
+  config: ShortActionsConfig;
+  items: ShortActionItem[];
 }
 
 export interface EventItem {
@@ -169,4 +178,54 @@ export interface ContentTopic {
   visibleFrom: string | null;
   order: number;
   author?: ContentTopicAuthor | null;
+}
+
+export interface MassAndPastorSectionConfig {
+  positionFont: string | null;
+  positionSize: string | null;
+  positionColor: string | null;
+  nameFont: string | null;
+  nameSize: string | null;
+  nameColor: string | null;
+}
+
+export interface MassTime {
+  id: number;
+  label: string;
+  hours: string;
+  note: string | null;
+  order: number;
+}
+
+export interface Pastor {
+  id: number;
+  position: string;
+  fullName: string;
+  photoUrl: string | null;
+  duties: string;
+  order: number;
+}
+
+export interface MassAndPastorData {
+  config: MassAndPastorSectionConfig;
+  massTimes: MassTime[];
+  pastors: Pastor[];
+}
+
+export interface AssociationsConfig {
+  nameFont: string | null;
+  nameSize: string | null;
+}
+
+export interface Association {
+  id: number;
+  name: string;
+  imageUrl: string | null;
+  link: string;
+  order: number;
+}
+
+export interface AssociationsData {
+  config: AssociationsConfig;
+  items: Association[];
 }
