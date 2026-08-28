@@ -31,6 +31,9 @@ export interface SocialLinks {
 export interface ContactAddresses {
   id: number;
   address: string;
+  street: string;
+  city: string;
+  postCode: string;
   phone: string;
   social: SocialVisibility;
 }

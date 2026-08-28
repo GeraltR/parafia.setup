@@ -35,6 +35,11 @@ const MassAndPastorPage = lazy(() =>
 const AssociationsPage = lazy(() =>
   import("@/pages/Associations/AssociationsPage").then((m) => ({ default: m.AssociationsPage }))
 )
+const ContactAddressesPage = lazy(() =>
+  import("@/pages/ContactAddresses/ContactAddressesPage").then((m) => ({
+    default: m.ContactAddressesPage,
+  }))
+)
 
 const pageFallback = <p className="text-sm text-muted-foreground">Ładowanie…</p>
 
@@ -153,6 +158,14 @@ function App() {
                 </Suspense>
               }
             />
+            <Route
+              path="/contact-addresses"
+              element={
+                <Suspense fallback={pageFallback}>
+                  <ContactAddressesPage />
+                </Suspense>
+              }
+            />
             {allNavLinks
               .filter(
                 (link) =>
@@ -167,6 +180,7 @@ function App() {
                     "/short-actions",
                     "/mass-and-pastor",
                     "/associations",
+                    "/contact-addresses",
                   ].includes(link.to)
               )
               .map((link) => (
