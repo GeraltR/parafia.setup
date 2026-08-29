@@ -40,6 +40,20 @@ const ContactAddressesPage = lazy(() =>
     default: m.ContactAddressesPage,
   }))
 )
+const FooterPage = lazy(() =>
+  import("@/pages/Footer/FooterPage").then((m) => ({ default: m.FooterPage }))
+)
+const EventsPage = lazy(() =>
+  import("@/pages/Events/EventsPage").then((m) => ({ default: m.EventsPage }))
+)
+const NewsPage = lazy(() =>
+  import("@/pages/News/NewsPage").then((m) => ({ default: m.NewsPage }))
+)
+const MassIntentionsPage = lazy(() =>
+  import("@/pages/MassIntentions/MassIntentionsPage").then((m) => ({
+    default: m.MassIntentionsPage,
+  }))
+)
 
 const pageFallback = <p className="text-sm text-muted-foreground">Ładowanie…</p>
 
@@ -166,6 +180,38 @@ function App() {
                 </Suspense>
               }
             />
+            <Route
+              path="/footer"
+              element={
+                <Suspense fallback={pageFallback}>
+                  <FooterPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/events"
+              element={
+                <Suspense fallback={pageFallback}>
+                  <EventsPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/news"
+              element={
+                <Suspense fallback={pageFallback}>
+                  <NewsPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/mass-intentions"
+              element={
+                <Suspense fallback={pageFallback}>
+                  <MassIntentionsPage />
+                </Suspense>
+              }
+            />
             {allNavLinks
               .filter(
                 (link) =>
@@ -181,6 +227,10 @@ function App() {
                     "/mass-and-pastor",
                     "/associations",
                     "/contact-addresses",
+                    "/footer",
+                    "/events",
+                    "/news",
+                    "/mass-intentions",
                   ].includes(link.to)
               )
               .map((link) => (

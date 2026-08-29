@@ -116,6 +116,8 @@ export interface EventItem {
   time: string;
   title: string;
   description: string;
+  body: string;
+  author?: ContentTopicAuthor | null;
 }
 
 export interface NewsItem {
@@ -124,6 +126,9 @@ export interface NewsItem {
   title: string;
   excerpt: string;
   image: string;
+  body: string;
+  showImageOnFullContent: boolean;
+  author?: ContentTopicAuthor | null;
 }
 
 export interface MassIntention {
@@ -131,6 +136,20 @@ export interface MassIntention {
   date: string; // ISO date
   time: string;
   intention: string;
+  isHoliday: boolean;
+  dayDescription: string | null;
+  author?: ContentTopicAuthor | null;
+}
+
+export interface MassIntentionsConfig {
+  holidayDescribedColor: string;
+  holidayPlainColor: string;
+  weekdayColor: string;
+}
+
+export interface MassIntentionsData {
+  config: MassIntentionsConfig;
+  items: MassIntention[];
 }
 
 export interface InfoExtra {
@@ -148,6 +167,8 @@ export interface OfficeHour {
   id: number;
   day: string;
   hours: string;
+  hoursOn: string;
+  hoursEnd: string;
 }
 
 export interface FooterLegalLink {
@@ -156,13 +177,22 @@ export interface FooterLegalLink {
   href: string;
 }
 
+export interface FooterStyleConfig {
+  bgColor: string | null;
+  titleFont: string | null;
+  titleSize: string | null;
+  titleColor: string | null;
+}
+
 export interface FooterConfig {
+  officeTitle: string;
   officeHours: OfficeHour[];
   officeNote: string;
   mapEmbedUrl: string;
   mapLink: string;
   legalLinks: FooterLegalLink[];
   copyrightText: string;
+  config: FooterStyleConfig;
 }
 
 export type ContentPageSlug = "sakramenty" | "parafia" | "liturgia";
