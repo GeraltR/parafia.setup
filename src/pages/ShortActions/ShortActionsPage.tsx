@@ -41,7 +41,7 @@ function toFormValues(data: ShortActionsData): ShortActionsFormValues {
 
 export function ShortActionsPage() {
   const { user } = useAuth()
-  const canWrite = user?.canWrite.content ?? false
+  const canWrite = user?.canWrite.site ?? false
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [saveError, setSaveError] = useState<string | null>(null)
   const fonts = useFonts()

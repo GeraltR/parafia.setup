@@ -16,13 +16,13 @@ export const navGroups: NavGroup[] = [
       { to: "/hero", label: "Hero" },
       { to: "/navbar", label: "Nawigacja" },
       { to: "/contact-addresses", label: "Dane kontaktowe" },
+      { to: "/short-actions", label: "Skróty" },
+      { to: "/footer", label: "Stopka" },
     ],
   },
   {
     label: "Treści",
     items: [
-      { to: "/short-actions", label: "Skróty" },
-      { to: "/footer", label: "Stopka" },
       { to: "/events", label: "Wydarzenia" },
       { to: "/news", label: "Aktualności" },
       { to: "/mass-intentions", label: "Intencje mszalne" },
