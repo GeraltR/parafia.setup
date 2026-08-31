@@ -10,25 +10,31 @@ const WEEKDAY_FULL_PL = [
   "sobota",
 ]
 
+function formatDatePl(iso: string): string {
+  const date = new Date(`${iso}T00:00:00`)
+  const day = String(date.getDate()).padStart(2, "0")
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  return `${day}.${month}.${date.getFullYear()}`
+}
+
 function formatDay(iso: string): string {
   const date = new Date(`${iso}T00:00:00`)
   const weekday = WEEKDAY_FULL_PL[date.getDay()]
-  const day = String(date.getDate()).padStart(2, "0")
-  const month = String(date.getMonth() + 1).padStart(2, "0")
-  return `${weekday}, ${day}.${month}.${date.getFullYear()}`
+  return `${weekday}, ${formatDatePl(iso)}`
 }
 
 const PRINT_CSS = `
   body { font-family: Georgia, "Times New Roman", serif; color: #1a1a1a; margin: 32px; }
   h1 { font-size: 1.3rem; text-align: center; margin-bottom: 24px; }
   .day { break-inside: avoid; margin-bottom: 18px; }
-  .day-header { background: #eee; font-weight: bold; padding: 6px 10px; border: 1px solid #999; }
+  .day-header { background: #eee; font-weight: bold; padding: 6px 10px; text-align: center; }
   table { width: 100%; border-collapse: collapse; }
   td { border: 1px solid #999; padding: 6px 10px; vertical-align: top; }
   td.time { width: 70px; font-weight: bold; white-space: nowrap; }
 `
 
-export function printMassIntentions(items: MassIntention[], fromLabel: string) {
+export function printMassIntentions(items: MassIntention[], fromIso: string) {
+  const fromLabel = fromIso ? formatDatePl(fromIso) : ""
   const groups: { date: string; dayDescription: string | null; rows: MassIntention[] }[] = []
   for (const item of items) {
     const last = groups[groups.length - 1]

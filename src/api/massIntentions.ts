@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/api-client"
-import type { MassIntention, MassIntentionsConfig, MassIntentionsData } from "@/types/config"
+import type { MassIntention, MassIntentionsConfig, MassIntentionsManageData } from "@/types/config"
 
 export interface MassIntentionPayload {
   date: string
@@ -17,7 +17,10 @@ export interface MassIntentionsConfigPayload {
 }
 
 export const massIntentionsApi = {
-  listManage: () => apiClient.get<MassIntentionsData>("/mass-intentions/manage"),
+  listManage: (page: number = 1, search: string = "") =>
+    apiClient.get<MassIntentionsManageData>(
+      `/mass-intentions/manage?page=${page}&search=${encodeURIComponent(search)}`
+    ),
   create: (payload: MassIntentionPayload) =>
     apiClient.post<MassIntention>("/mass-intentions", payload),
   update: (id: number, payload: MassIntentionPayload) =>
@@ -25,4 +28,6 @@ export const massIntentionsApi = {
   remove: (id: number) => apiClient.del<void>(`/mass-intentions/${id}`),
   updateConfig: (payload: MassIntentionsConfigPayload) =>
     apiClient.put<MassIntentionsConfig>("/mass-intentions/config", payload),
+  printList: (from: string) =>
+    apiClient.get<MassIntention[]>(`/mass-intentions/print?from=${from}`),
 }

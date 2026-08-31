@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { ColorField } from "@/components/ColorField"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
+import { cn } from "@/lib/utils"
 import type { MassIntentionsConfig } from "@/types/config"
 
 import { configSchema, type ConfigFormValues } from "./schema"
@@ -31,7 +32,8 @@ export function ConfigColors({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-3 rounded-lg border p-4">
         <p className="text-sm font-medium">Kolory dni</p>
-        <div className="grid grid-cols-3 gap-4">
+        <div className={cn("grid grid-cols-3 gap-4", !canWrite && "opacity-60")}>
+        <fieldset disabled={!canWrite} className={cn("contents", !canWrite && "pointer-events-none")}>
           <ColorField
             control={form.control}
             name="holidayDescribedColor"
@@ -53,6 +55,7 @@ export function ConfigColors({
             fallback="#8ed1fc"
             allowClear={false}
           />
+        </fieldset>
         </div>
         {canWrite && (
           <Button

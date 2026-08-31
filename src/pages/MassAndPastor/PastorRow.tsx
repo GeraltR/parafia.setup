@@ -22,10 +22,12 @@ export function PastorRow({
   control,
   index,
   onRemove,
+  canWrite,
 }: {
   control: Control<MassAndPastorFormValues>
   index: number
   onRemove: () => void
+  canWrite: boolean
 }) {
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
@@ -118,7 +120,7 @@ export function PastorRow({
         render={({ field }) => (
           <FormItem>
             <FormLabel>Zadania w parafii</FormLabel>
-            <RichTextEditor initialContent={field.value} onChange={field.onChange} />
+            <RichTextEditor initialContent={field.value} onChange={field.onChange} editable={canWrite} />
             <FormMessage />
           </FormItem>
         )}

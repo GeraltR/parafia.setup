@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Form } from "@/components/ui/form"
 import { useAuth } from "@/context/useAuth"
+import { cn } from "@/lib/utils"
 import type { Navbar } from "@/types/config"
 
 import { NavItemRow } from "./NavItemRow"
@@ -96,7 +97,8 @@ export function NavbarPage() {
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="grid gap-4">
+          <CardContent className={cn("grid gap-4", !canWrite && "opacity-60")}>
+          <fieldset disabled={!canWrite} className={cn("contents", !canWrite && "pointer-events-none")}>
             {fields.map((field, index) => (
               <NavItemRow
                 key={field.id}
@@ -117,6 +119,7 @@ export function NavbarPage() {
             >
               <Plus /> Dodaj pozycję
             </Button>
+          </fieldset>
           </CardContent>
           <CardFooter className="sticky bottom-0 flex items-center gap-3 bg-muted shadow-[0_-2px_8px_rgba(0,0,0,0.06)]">
             <Button type="submit" disabled={!canWrite || form.formState.isSubmitting}>

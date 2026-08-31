@@ -2,7 +2,6 @@ import { Plus, Printer, Trash2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { CardAction } from "@/components/ui/card"
-import { printMassIntentions } from "@/lib/printMassIntentions"
 import type { MassIntention, MassIntentionsConfig } from "@/types/config"
 
 interface DayGroup {
@@ -31,6 +30,11 @@ function dayColor(config: MassIntentionsConfig, group: DayGroup): string {
   return config.weekdayColor
 }
 
+function formatDatePl(iso: string): string {
+  const [year, month, day] = iso.split("-")
+  return `${day}.${month}.${year}`
+}
+
 export function IntentionList({
   items,
   config,
@@ -38,6 +42,7 @@ export function IntentionList({
   onAdd,
   onEdit,
   onDelete,
+  onPrint,
 }: {
   items: MassIntention[]
   config: MassIntentionsConfig
@@ -45,19 +50,14 @@ export function IntentionList({
   onAdd: () => void
   onEdit: (intention: MassIntention) => void
   onDelete: (intention: MassIntention) => void
+  onPrint: () => void
 }) {
   const groups = groupByDay(items)
 
   return (
     <>
       <CardAction className="flex gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          disabled={items.length === 0}
-          onClick={() => printMassIntentions(items, items[0]?.date ?? "")}
-        >
+        <Button type="button" variant="outline" size="sm" onClick={onPrint}>
           <Printer /> Drukuj
         </Button>
         {canWrite && (
@@ -73,10 +73,10 @@ export function IntentionList({
         {groups.map((group) => (
           <div key={group.date} className="overflow-hidden rounded-lg border">
             <div
-              className="px-3 py-2 text-sm font-semibold"
+              className="px-3 py-2 text-sm font-semibold text-black"
               style={{ backgroundColor: dayColor(config, group) }}
             >
-              {group.date}
+              {formatDatePl(group.date)}
               {group.dayDescription && ` — ${group.dayDescription}`}
             </div>
             {group.rows.map((row) => (

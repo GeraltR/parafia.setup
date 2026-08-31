@@ -10,6 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/context/useAuth"
+import { cn } from "@/lib/utils"
 import type { ContactAddresses, SocialLinks, SocialVisibility } from "@/types/config"
 
 import { SocialNetworkRow } from "./SocialNetworkRow"
@@ -100,7 +101,8 @@ export function ContactAddressesPage() {
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="grid gap-6">
+          <CardContent className={cn("grid gap-6", !canWrite && "opacity-60")}>
+          <fieldset disabled={!canWrite} className={cn("contents", !canWrite && "pointer-events-none")}>
             <div className="grid gap-4">
               <p className="text-sm font-medium">Adres i telefon</p>
               <div className="grid grid-cols-2 gap-4">
@@ -174,6 +176,7 @@ export function ContactAddressesPage() {
                 />
               ))}
             </div>
+          </fieldset>
           </CardContent>
           <CardFooter className="sticky bottom-0 flex items-center gap-3 bg-muted shadow-[0_-2px_8px_rgba(0,0,0,0.06)]">
             <Button type="submit" disabled={!canWrite || form.formState.isSubmitting}>

@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/context/useAuth"
 import { useFonts } from "@/lib/fonts"
+import { cn } from "@/lib/utils"
 import type { MassAndPastorData } from "@/types/config"
 
 import { MassTimeRow } from "./MassTimeRow"
@@ -101,7 +102,8 @@ export function MassAndPastorPage() {
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="grid gap-6">
+          <CardContent className={cn("grid gap-6", !canWrite && "opacity-60")}>
+          <fieldset disabled={!canWrite} className={cn("contents", !canWrite && "pointer-events-none")}>
             <div className="grid gap-4">
               <p className="text-sm font-medium">Styl stanowiska i imienia duszpasterzy</p>
               <div className="grid grid-cols-3 gap-4">
@@ -230,9 +232,11 @@ export function MassAndPastorPage() {
                   control={form.control}
                   index={index}
                   onRemove={() => pastorsArray.remove(index)}
+                  canWrite={canWrite}
                 />
               ))}
             </div>
+          </fieldset>
           </CardContent>
           <CardFooter className="sticky bottom-0 flex items-center gap-3 bg-muted shadow-[0_-2px_8px_rgba(0,0,0,0.06)]">
             <Button type="submit" disabled={!canWrite || form.formState.isSubmitting}>

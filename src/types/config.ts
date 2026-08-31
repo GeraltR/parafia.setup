@@ -152,6 +152,16 @@ export interface MassIntentionsData {
   items: MassIntention[];
 }
 
+export interface MassIntentionsMeta {
+  currentPage: number;
+  lastPage: number;
+  total: number;
+}
+
+export interface MassIntentionsManageData extends MassIntentionsData {
+  meta: MassIntentionsMeta;
+}
+
 export interface InfoExtra {
   id: number;
   title: string;

@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/context/useAuth"
 import { useFonts } from "@/lib/fonts"
+import { cn } from "@/lib/utils"
 import type { FooterConfig } from "@/types/config"
 
 import { OfficeHourRow } from "./OfficeHourRow"
@@ -92,7 +93,8 @@ export function FooterPage() {
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="grid gap-6">
+          <CardContent className={cn("grid gap-6", !canWrite && "opacity-60")}>
+          <fieldset disabled={!canWrite} className={cn("contents", !canWrite && "pointer-events-none")}>
             <div className="grid gap-4">
               <p className="text-sm font-medium">Kancelaria</p>
               <FormField
@@ -228,6 +230,7 @@ export function FooterPage() {
                 fallback="#ffffff"
               />
             </div>
+          </fieldset>
           </CardContent>
           <CardFooter className="sticky bottom-0 flex items-center gap-3 bg-muted shadow-[0_-2px_8px_rgba(0,0,0,0.06)]">
             <Button type="submit" disabled={!canWrite || form.formState.isSubmitting}>

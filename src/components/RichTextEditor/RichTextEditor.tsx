@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { EditorContent, useEditor } from "@tiptap/react"
 import Image from "@tiptap/extension-image"
 import Link from "@tiptap/extension-link"
@@ -20,9 +21,11 @@ import "./content.css"
 export function RichTextEditor({
   initialContent,
   onChange,
+  editable = true,
 }: {
   initialContent: string
   onChange: (html: string) => void
+  editable?: boolean
 }) {
   const editor = useEditor({
     extensions: [
@@ -40,8 +43,15 @@ export function RichTextEditor({
       TableCell,
     ],
     content: initialContent,
+    editable,
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
   })
+
+  useEffect(() => {
+    if (editor && editor.isEditable !== editable) {
+      editor.setEditable(editable)
+    }
+  }, [editable, editor])
 
   async function handleImageUpload(file: File) {
     try {
@@ -58,7 +68,7 @@ export function RichTextEditor({
 
   return (
     <div className="rounded-lg border">
-      <EditorToolbar editor={editor} onImageUpload={handleImageUpload} />
+      {editable && <EditorToolbar editor={editor} onImageUpload={handleImageUpload} />}
       <EditorContent editor={editor} className="content-editor min-h-48 p-4 focus:outline-none" />
     </div>
   )
