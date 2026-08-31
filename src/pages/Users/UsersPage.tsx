@@ -81,7 +81,9 @@ export function UsersPage() {
               return (
                 <tr key={rowUser.id} className="border-b last:border-0">
                   <td className="py-2 pr-4">{rowUser.name}</td>
-                  <td className="py-2 pr-4">{rowUser.email}</td>
+                  <td className="py-2 pr-4">
+                    {rowUser.email ?? <span className="text-muted-foreground">******</span>}
+                  </td>
                   <td className="py-2 pr-4">{rowUser.permissionLevelLabel}</td>
                   <td className="py-2">
                     <div className="flex gap-2">

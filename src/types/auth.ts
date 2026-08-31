@@ -9,7 +9,7 @@ export interface AuthUserCanWrite {
 export interface AuthUser {
   id: number
   name: string
-  email: string
+  email: string | null
   permissionLevel: PermissionLevel
   permissionLevelLabel: string
   canWrite: AuthUserCanWrite
