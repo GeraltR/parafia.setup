@@ -162,15 +162,18 @@ export interface MassIntentionsManageData extends MassIntentionsData {
   meta: MassIntentionsMeta;
 }
 
-export interface InfoExtra {
+export interface InfoItem {
   id: number;
+  validFrom: string; // ISO date
+  validTo: string; // ISO date
   title: string;
+  shortInfo: string;
   description: string;
-  images: string[]; 
-  progressPercent: number;
-  bankAccount: string;
-  donationUrl: string;
-  active: boolean;
+  image: string;
+  progressValue: number;
+  progressDescription: string;
+  information: string | null;
+  author?: ContentTopicAuthor | null;
 }
 
 export interface OfficeHour {
