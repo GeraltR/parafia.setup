@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 
 import { contentTopicsApi } from "@/api/contentTopics"
 import { usersApi } from "@/api/users"
+import { DatePicker } from "@/components/DatePicker"
 import { RichTextEditor } from "@/components/RichTextEditor/RichTextEditor"
 import { Button } from "@/components/ui/button"
 import { CardContent, CardFooter } from "@/components/ui/card"
@@ -160,19 +161,42 @@ export function TopicEditor({
               <FormField
                 control={form.control}
                 name="visibleFrom"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Widoczna od</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="datetime-local"
-                        value={isoToDatetimeLocal(field.value)}
-                        onChange={(e) => field.onChange(datetimeLocalToIso(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  const datetimeLocal = isoToDatetimeLocal(field.value)
+                  const [datePart, timePart] = datetimeLocal
+                    ? datetimeLocal.split("T")
+                    : ["", ""]
+                  return (
+                    <FormItem>
+                      <FormLabel>Widoczna od</FormLabel>
+                      <FormControl>
+                        <div className="flex gap-2">
+                          <DatePicker
+                            value={datePart}
+                            onChange={(newDate) =>
+                              field.onChange(
+                                datetimeLocalToIso(`${newDate}T${timePart || "00:00"}`)
+                              )
+                            }
+                          />
+                          <Input
+                            type="time"
+                            className="w-28"
+                            value={timePart}
+                            onChange={(e) =>
+                              field.onChange(
+                                datetimeLocalToIso(
+                                  `${datePart || new Date().toISOString().slice(0, 10)}T${e.target.value}`
+                                )
+                              )
+                            }
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )
+                }}
               />
               <FormField
                 control={form.control}

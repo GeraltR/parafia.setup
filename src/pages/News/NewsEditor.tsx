@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 
 import { newsApi } from "@/api/news"
 import { usersApi } from "@/api/users"
+import { DatePicker } from "@/components/DatePicker"
 import { RichTextEditor } from "@/components/RichTextEditor/RichTextEditor"
 import { Button } from "@/components/ui/button"
 import { CardContent, CardFooter } from "@/components/ui/card"
@@ -112,7 +113,7 @@ export function NewsEditor({
                 <FormItem>
                   <FormLabel>Data</FormLabel>
                   <FormControl>
-                    <Input type="date" {...field} />
+                    <DatePicker value={field.value} onChange={field.onChange} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
