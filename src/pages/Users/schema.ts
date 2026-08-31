@@ -28,3 +28,11 @@ export const createUserSchema = z
   })
 
 export type CreateUserFormValues = z.infer<typeof createUserSchema>
+
+export const editUserSchema = z.object({
+  name: z.string().min(1, "Wymagane"),
+  email: z.string().min(1, "Wymagane").email("Nieprawidłowy adres e-mail"),
+  permissionLevel: z.union([z.literal(0), z.literal(1), z.literal(3), z.literal(7)]),
+})
+
+export type EditUserFormValues = z.infer<typeof editUserSchema>

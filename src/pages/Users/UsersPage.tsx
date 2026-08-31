@@ -9,6 +9,7 @@ import type { AuthUser } from "@/types/auth"
 import { AddUserDialog } from "./AddUserDialog"
 import { ChangePasswordDialog } from "./ChangePasswordDialog"
 import { DeleteUserDialog } from "./DeleteUserDialog"
+import { EditUserDialog } from "./EditUserDialog"
 
 function sortUsers(users: AuthUser[]): AuthUser[] {
   return [...users].sort((a, b) =>
@@ -26,6 +27,7 @@ export function UsersPage() {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [passwordDialogUser, setPasswordDialogUser] = useState<AuthUser | null>(null)
   const [deleteDialogUser, setDeleteDialogUser] = useState<AuthUser | null>(null)
+  const [editDialogUser, setEditDialogUser] = useState<AuthUser | null>(null)
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
 
   function loadUsers() {
@@ -87,6 +89,16 @@ export function UsersPage() {
                   <td className="py-2 pr-4">{rowUser.permissionLevelLabel}</td>
                   <td className="py-2">
                     <div className="flex gap-2">
+                      {isSupervisor && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setEditDialogUser(rowUser)}
+                        >
+                          Edytuj
+                        </Button>
+                      )}
                       {canChangePassword && (
                         <Button
                           type="button"
@@ -115,6 +127,17 @@ export function UsersPage() {
           </tbody>
         </table>
       </CardContent>
+
+      {editDialogUser && (
+        <EditUserDialog
+          user={editDialogUser}
+          onOpenChange={(open) => !open && setEditDialogUser(null)}
+          onSuccess={(updatedUser) => {
+            setEditDialogUser(null)
+            setUsers((prev) => sortUsers(prev.map((u) => (u.id === updatedUser.id ? updatedUser : u))))
+          }}
+        />
+      )}
 
       {passwordDialogUser && (
         <ChangePasswordDialog
