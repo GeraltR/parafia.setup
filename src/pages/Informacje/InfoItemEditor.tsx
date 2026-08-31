@@ -3,8 +3,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
 import { informacjeApi } from "@/api/informacje"
+import { fontsApi, type FontFamily } from "@/api/fonts"
 import { usersApi } from "@/api/users"
+import { ColorField } from "@/components/ColorField"
 import { DatePicker } from "@/components/DatePicker"
+import { NullableFontSelect } from "@/components/NullableFontSelect"
 import { RichTextEditor } from "@/components/RichTextEditor/RichTextEditor"
 import { Button } from "@/components/ui/button"
 import { CardContent, CardFooter } from "@/components/ui/card"
@@ -42,6 +45,7 @@ export function InfoItemEditor({
 }) {
   const { user } = useAuth()
   const [users, setUsers] = useState<AuthUser[]>([])
+  const [fonts, setFonts] = useState<FontFamily[]>([])
   const [error, setError] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
@@ -59,6 +63,11 @@ export function InfoItemEditor({
       progressValue: infoItem?.progressValue ?? 0,
       progressDescription: infoItem?.progressDescription ?? "",
       information: infoItem?.information ?? null,
+      bannerText: infoItem?.bannerText ?? null,
+      bannerFont: infoItem?.bannerFont ?? null,
+      bannerTextColor: infoItem?.bannerTextColor ?? null,
+      bannerBgColor: infoItem?.bannerBgColor ?? null,
+      bannerDurationSeconds: infoItem?.bannerDurationSeconds ?? 0,
       authorId: infoItem?.author?.id ?? user?.id ?? 0,
     },
   })
@@ -68,6 +77,10 @@ export function InfoItemEditor({
       .list()
       .then(setUsers)
       .catch(() => setUsers([]))
+    fontsApi
+      .list()
+      .then(setFonts)
+      .catch(() => setFonts([]))
   }, [])
 
   async function handleImageChange(
@@ -274,6 +287,74 @@ export function InfoItemEditor({
               </FormItem>
             )}
           />
+          <div className="grid gap-3 rounded-lg border p-3">
+            <p className="text-sm font-medium">Baner (opcjonalnie)</p>
+            <FormField
+              control={form.control}
+              name="bannerText"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tekst baneru</FormLabel>
+                  <FormControl>
+                    <Input
+                      value={field.value ?? ""}
+                      onChange={(e) => field.onChange(e.target.value || null)}
+                      placeholder="Ważny komunikat parafialny"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="grid grid-cols-3 gap-4">
+              <FormField
+                control={form.control}
+                name="bannerFont"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Czcionka</FormLabel>
+                    <NullableFontSelect value={field.value} onChange={field.onChange} fonts={fonts} />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <ColorField
+                control={form.control}
+                name="bannerTextColor"
+                label="Kolor tekstu"
+                fallback="#ffffff"
+              />
+              <ColorField
+                control={form.control}
+                name="bannerBgColor"
+                label="Kolor tła"
+                fallback="#0d1e35"
+              />
+            </div>
+            <FormField
+              control={form.control}
+              name="bannerDurationSeconds"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Czas animacji (sekundy)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      min={0}
+                      max={300}
+                      value={field.value}
+                      onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <p className="text-xs text-muted-foreground">
+              Przy wartości 0 tekst baneru stoi wyśrodkowany bez animacji. Przy wartości większej
+              niż 0 tekst przewija się od prawej do lewej w podanym czasie (w sekundach).
+            </p>
+          </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
         </CardContent>
         <CardFooter className="sticky bottom-0 flex items-center gap-3 bg-muted shadow-[0_-2px_8px_rgba(0,0,0,0.06)]">

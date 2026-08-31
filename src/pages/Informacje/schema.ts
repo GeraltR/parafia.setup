@@ -11,6 +11,11 @@ export const infoItemSchema = z
     progressValue: z.number().min(0).max(100),
     progressDescription: z.string().min(1, "Wymagane"),
     information: z.string().nullable(),
+    bannerText: z.string().nullable(),
+    bannerFont: z.string().nullable(),
+    bannerTextColor: z.string().nullable(),
+    bannerBgColor: z.string().nullable(),
+    bannerDurationSeconds: z.number().min(0).max(300),
     authorId: z.number(),
   })
   .refine((data) => data.validTo >= data.validFrom, {
