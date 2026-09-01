@@ -22,6 +22,9 @@ function toFormValues(contact: ContactAddresses, links: SocialLinks): ContactAdd
     city: contact.city,
     postCode: contact.postCode,
     phone: contact.phone,
+    nip: contact.nip,
+    bankAccountNumber: contact.bankAccountNumber,
+    bankName: contact.bankName,
     social: NETWORK_KEYS.map((network) => ({
       network,
       link: links[network],
@@ -43,6 +46,9 @@ export function ContactAddressesPage() {
       city: "",
       postCode: "",
       phone: "",
+      nip: null,
+      bankAccountNumber: null,
+      bankName: null,
       social: NETWORK_KEYS.map((network) => ({ network, link: "", visibility: false })),
     },
   })
@@ -75,6 +81,9 @@ export function ContactAddressesPage() {
           city: values.city,
           postCode: values.postCode,
           phone: values.phone,
+          nip: values.nip,
+          bankAccountNumber: values.bankAccountNumber,
+          bankName: values.bankName,
           social: visibility,
         }),
         socialApi.update(links),
@@ -155,6 +164,65 @@ export function ContactAddressesPage() {
                       <FormLabel>Miasto</FormLabel>
                       <FormControl>
                         <Input placeholder="Jaworzno" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            <Separator />
+
+            <div className="grid gap-4">
+              <p className="text-sm font-medium">NIP i rachunek bankowy</p>
+              <FormField
+                control={form.control}
+                name="nip"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>NIP</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="632-000-00-00"
+                        value={field.value ?? ""}
+                        onChange={(e) => field.onChange(e.target.value || null)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="bankAccountNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Numer rachunku bankowego</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="00 0000 0000 0000 0000 0000 0000"
+                          value={field.value ?? ""}
+                          onChange={(e) => field.onChange(e.target.value || null)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="bankName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nazwa banku</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Bank Spółdzielczy"
+                          value={field.value ?? ""}
+                          onChange={(e) => field.onChange(e.target.value || null)}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

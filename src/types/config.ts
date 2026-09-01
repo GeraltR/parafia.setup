@@ -35,6 +35,9 @@ export interface ContactAddresses {
   city: string;
   postCode: string;
   phone: string;
+  nip: string | null;
+  bankAccountNumber: string | null;
+  bankName: string | null;
   social: SocialVisibility;
 }
 

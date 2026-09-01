@@ -27,6 +27,9 @@ export const contactAddressSchema = z.object({
   city: z.string().min(1, "Wymagane"),
   postCode: z.string().regex(/^\d{2}-\d{3}$/, "Format: NN-NNN"),
   phone: z.string().min(1, "Wymagane"),
+  nip: z.string().nullable(),
+  bankAccountNumber: z.string().nullable(),
+  bankName: z.string().nullable(),
   social: z
     .array(
       z.object({
