@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react"
 
+import { Plus } from "lucide-react"
+
 import { informacjeApi } from "@/api/informacje"
 import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardAction, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -72,13 +74,24 @@ export function InformacjePage() {
   return (
     <Card className="max-w-3xl overflow-visible">
       <CardHeader>
-        <CardTitle>Informacje</CardTitle>
+        <div className="flex flex-wrap items-center gap-2">
+          <CardTitle>Informacje dodatkowe</CardTitle>
+          <span className="text-sm text-muted-foreground">
+            – będą widoczne na stronie w zdefiniowanym okresie
+          </span>
+        </div>
+        {mode.type === "list" && canWrite && (
+          <CardAction>
+            <Button type="button" size="sm" onClick={() => setMode({ type: "new" })}>
+              <Plus /> Dodaj informację
+            </Button>
+          </CardAction>
+        )}
       </CardHeader>
       {mode.type === "list" ? (
         <InfoItemList
           items={items}
           canWrite={canWrite}
-          onAdd={() => setMode({ type: "new" })}
           onEdit={(item) => setMode({ type: "edit", item })}
           onDelete={setDeleteTarget}
         />

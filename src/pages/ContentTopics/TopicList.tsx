@@ -1,41 +1,28 @@
-import { Plus, Printer, Trash2 } from "lucide-react"
+import { Printer, Trash2 } from "lucide-react"
 
 import { TopicIcon } from "@/components/TopicIcon"
 import { Button } from "@/components/ui/button"
-import { CardAction } from "@/components/ui/card"
 import { printContent } from "@/lib/printContent"
 import type { ContentPageSlug, ContentTopic } from "@/types/config"
 
 export function TopicList({
   page,
   topics,
-  maxTopics,
   canWrite,
-  onAdd,
   onEdit,
   onDelete,
 }: {
   page: ContentPageSlug
   topics: ContentTopic[]
-  maxTopics?: number
   canWrite: boolean
-  onAdd: () => void
   onEdit: (topic: ContentTopic) => void
   onDelete: (topic: ContentTopic) => void
 }) {
   const canPrint = page !== "sakramenty"
   const showMeta = page !== "sakramenty"
-  const canAddMore = maxTopics === undefined || topics.length < maxTopics
 
   return (
     <>
-      {canWrite && canAddMore && (
-        <CardAction>
-          <Button type="button" size="sm" onClick={onAdd}>
-            <Plus /> Dodaj temat
-          </Button>
-        </CardAction>
-      )}
       <div className="grid gap-3 p-(--card-spacing)">
         {topics.length === 0 && (
           <p className="text-sm text-muted-foreground">Brak tematów w tej sekcji.</p>

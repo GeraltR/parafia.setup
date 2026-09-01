@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
 
+import { Plus } from "lucide-react"
+
 import { eventsApi } from "@/api/events"
-import { Card, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardAction, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -73,12 +75,18 @@ export function EventsPage() {
     <Card className="max-w-3xl overflow-visible">
       <CardHeader>
         <CardTitle>Najbliższe wydarzenia</CardTitle>
+        {mode.type === "list" && canWrite && (
+          <CardAction>
+            <Button type="button" size="sm" onClick={() => setMode({ type: "new" })}>
+              <Plus /> Dodaj wydarzenie
+            </Button>
+          </CardAction>
+        )}
       </CardHeader>
       {mode.type === "list" ? (
         <EventList
           events={events}
           canWrite={canWrite}
-          onAdd={() => setMode({ type: "new" })}
           onEdit={(event) => setMode({ type: "edit", event })}
           onDelete={setDeleteTarget}
         />

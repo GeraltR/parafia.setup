@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react"
 
+import { Plus } from "lucide-react"
+
 import { contentTopicsApi } from "@/api/contentTopics"
 import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardAction, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -34,6 +36,7 @@ export function ContentTopicsPage({
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [mode, setMode] = useState<Mode>({ type: "list" })
   const [deleteTarget, setDeleteTarget] = useState<ContentTopic | null>(null)
+  const canAddMore = maxTopics === undefined || topics.length < maxTopics
 
   function load() {
     setStatus("loading")
@@ -82,14 +85,19 @@ export function ContentTopicsPage({
     <Card className="max-w-3xl overflow-visible">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
+        {mode.type === "list" && canWrite && canAddMore && (
+          <CardAction>
+            <Button type="button" size="sm" onClick={() => setMode({ type: "new" })}>
+              <Plus /> Dodaj temat
+            </Button>
+          </CardAction>
+        )}
       </CardHeader>
       {mode.type === "list" ? (
         <TopicList
           page={page}
           topics={topics}
-          maxTopics={maxTopics}
           canWrite={canWrite}
-          onAdd={() => setMode({ type: "new" })}
           onEdit={(topic) => setMode({ type: "edit", topic })}
           onDelete={setDeleteTarget}
         />

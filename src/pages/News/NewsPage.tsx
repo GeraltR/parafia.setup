@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
 
+import { Plus } from "lucide-react"
+
 import { newsApi } from "@/api/news"
-import { Card, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardAction, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -73,12 +75,18 @@ export function NewsPage() {
     <Card className="max-w-3xl overflow-visible">
       <CardHeader>
         <CardTitle>Aktualności</CardTitle>
+        {mode.type === "list" && canWrite && (
+          <CardAction>
+            <Button type="button" size="sm" onClick={() => setMode({ type: "new" })}>
+              <Plus /> Dodaj aktualność
+            </Button>
+          </CardAction>
+        )}
       </CardHeader>
       {mode.type === "list" ? (
         <NewsList
           news={news}
           canWrite={canWrite}
-          onAdd={() => setMode({ type: "new" })}
           onEdit={(item) => setMode({ type: "edit", news: item })}
           onDelete={setDeleteTarget}
         />

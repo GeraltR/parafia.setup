@@ -1,31 +1,21 @@
-import { Plus, Trash2 } from "lucide-react"
+import { Trash2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { CardAction } from "@/components/ui/card"
 import type { InfoItem } from "@/types/config"
 
 export function InfoItemList({
   items,
   canWrite,
-  onAdd,
   onEdit,
   onDelete,
 }: {
   items: InfoItem[]
   canWrite: boolean
-  onAdd: () => void
   onEdit: (item: InfoItem) => void
   onDelete: (item: InfoItem) => void
 }) {
   return (
     <>
-      {canWrite && (
-        <CardAction>
-          <Button type="button" size="sm" onClick={onAdd}>
-            <Plus /> Dodaj informację
-          </Button>
-        </CardAction>
-      )}
       <div className="grid gap-3 p-(--card-spacing)">
         {items.length === 0 && (
           <p className="text-sm text-muted-foreground">Brak informacji.</p>

@@ -56,7 +56,7 @@ export function IntentionList({
 
   return (
     <>
-      <CardAction className="flex gap-2">
+      <CardAction className="flex gap-2 px-(--card-spacing)">
         <Button type="button" variant="outline" size="sm" onClick={onPrint}>
           <Printer /> Drukuj
         </Button>

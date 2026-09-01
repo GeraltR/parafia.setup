@@ -1,31 +1,21 @@
-import { Plus, Trash2 } from "lucide-react"
+import { Trash2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { CardAction } from "@/components/ui/card"
 import type { EventItem } from "@/types/config"
 
 export function EventList({
   events,
   canWrite,
-  onAdd,
   onEdit,
   onDelete,
 }: {
   events: EventItem[]
   canWrite: boolean
-  onAdd: () => void
   onEdit: (event: EventItem) => void
   onDelete: (event: EventItem) => void
 }) {
   return (
     <>
-      {canWrite && (
-        <CardAction>
-          <Button type="button" size="sm" onClick={onAdd}>
-            <Plus /> Dodaj wydarzenie
-          </Button>
-        </CardAction>
-      )}
       <div className="grid gap-3 p-(--card-spacing)">
         {events.length === 0 && (
           <p className="text-sm text-muted-foreground">Brak wydarzeń.</p>

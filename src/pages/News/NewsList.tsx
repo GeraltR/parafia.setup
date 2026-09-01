@@ -1,31 +1,21 @@
-import { Plus, Trash2 } from "lucide-react"
+import { Trash2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { CardAction } from "@/components/ui/card"
 import type { NewsItem } from "@/types/config"
 
 export function NewsList({
   news,
   canWrite,
-  onAdd,
   onEdit,
   onDelete,
 }: {
   news: NewsItem[]
   canWrite: boolean
-  onAdd: () => void
   onEdit: (news: NewsItem) => void
   onDelete: (news: NewsItem) => void
 }) {
   return (
     <>
-      {canWrite && (
-        <CardAction>
-          <Button type="button" size="sm" onClick={onAdd}>
-            <Plus /> Dodaj aktualność
-          </Button>
-        </CardAction>
-      )}
       <div className="grid gap-3 p-(--card-spacing)">
         {news.length === 0 && (
           <p className="text-sm text-muted-foreground">Brak aktualności.</p>
