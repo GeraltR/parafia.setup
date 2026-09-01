@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
-import { contentTopicsApi } from "@/api/contentTopics"
+import type { TopicsApi } from "@/api/contentTopics"
 import { usersApi } from "@/api/users"
 import { DatePicker } from "@/components/DatePicker"
 import { RichTextEditor } from "@/components/RichTextEditor/RichTextEditor"
@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/select"
 import { useAuth } from "@/context/useAuth"
 import type { AuthUser } from "@/types/auth"
-import type { ContentPageSlug, ContentTopic } from "@/types/config"
+import type { ContentTopic } from "@/types/config"
 
 import {
   datetimeLocalToIso,
@@ -36,18 +36,19 @@ import {
 } from "./schema"
 
 export function TopicEditor({
-  page,
+  api,
+  showScheduling,
   topic,
   onPublish,
   onCancel,
 }: {
-  page: ContentPageSlug
+  api: TopicsApi
+  showScheduling: boolean
   topic: ContentTopic | null
   onPublish: (values: TopicFormValues) => Promise<void>
   onCancel: () => void
 }) {
   const { user } = useAuth()
-  const showScheduling = page !== "sakramenty"
   const [users, setUsers] = useState<AuthUser[]>([])
   const [error, setError] = useState<string | null>(null)
   const [uploadingIcon, setUploadingIcon] = useState(false)
@@ -84,7 +85,7 @@ export function TopicEditor({
     setUploadingIcon(true)
     setIconUploadError(null)
     try {
-      const { url } = await contentTopicsApi.uploadImage(file)
+      const { url } = await api.uploadImage(file)
       onChange(url)
     } catch {
       setIconUploadError("Nie udało się przesłać ikony.")

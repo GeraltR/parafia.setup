@@ -1,6 +1,11 @@
 import { lazy, Suspense, type ReactNode } from "react"
 import { Navigate, Route, Routes, useLocation } from "react-router-dom"
 
+import {
+  liturgiaTopicsApi,
+  parafiaTopicsApi,
+  sakramentyTopicsApi,
+} from "@/api/contentTopics"
 import { AppShell } from "@/components/layout/AppShell"
 import { AuthProvider } from "@/context/AuthProvider"
 import { ThemeProvider } from "@/context/ThemeProvider"
@@ -131,7 +136,13 @@ function App() {
               path="/sakramenty"
               element={
                 <Suspense fallback={pageFallback}>
-                  <ContentTopicsPage page="sakramenty" title="Sakramenty" maxTopics={7} />
+                  <ContentTopicsPage
+                    api={sakramentyTopicsApi}
+                    title="Sakramenty"
+                    maxTopics={7}
+                    showScheduling={false}
+                    canPrint={false}
+                  />
                 </Suspense>
               }
             />
@@ -139,7 +150,7 @@ function App() {
               path="/parafia"
               element={
                 <Suspense fallback={pageFallback}>
-                  <ContentTopicsPage page="parafia" title="Parafia" />
+                  <ContentTopicsPage api={parafiaTopicsApi} title="Parafia" />
                 </Suspense>
               }
             />
@@ -147,7 +158,7 @@ function App() {
               path="/liturgia"
               element={
                 <Suspense fallback={pageFallback}>
-                  <ContentTopicsPage page="liturgia" title="Liturgia" />
+                  <ContentTopicsPage api={liturgiaTopicsApi} title="Liturgia" />
                 </Suspense>
               }
             />

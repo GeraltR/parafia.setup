@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 
 import { Plus } from "lucide-react"
 
-import { contentTopicsApi } from "@/api/contentTopics"
+import type { TopicsApi } from "@/api/contentTopics"
 import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { useAuth } from "@/context/useAuth"
-import type { ContentPageSlug, ContentTopic } from "@/types/config"
+import type { ContentTopic } from "@/types/config"
 
 import type { TopicFormValues } from "./schema"
 import { TopicEditor } from "./TopicEditor"
@@ -22,13 +22,17 @@ import { TopicList } from "./TopicList"
 type Mode = { type: "list" } | { type: "new" } | { type: "edit"; topic: ContentTopic }
 
 export function ContentTopicsPage({
-  page,
+  api,
   title,
   maxTopics,
+  showScheduling = true,
+  canPrint = true,
 }: {
-  page: ContentPageSlug
+  api: TopicsApi
   title: string
   maxTopics?: number
+  showScheduling?: boolean
+  canPrint?: boolean
 }) {
   const { user } = useAuth()
   const canWrite = user?.canWrite.content ?? false
@@ -40,8 +44,8 @@ export function ContentTopicsPage({
 
   function load() {
     setStatus("loading")
-    contentTopicsApi
-      .listManage(page)
+    api
+      .listManage()
       .then((data) => {
         setTopics(data)
         setStatus("ready")
@@ -52,13 +56,13 @@ export function ContentTopicsPage({
   useEffect(() => {
     load()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page])
+  }, [])
 
   async function handlePublish(values: TopicFormValues) {
     if (mode.type === "edit") {
-      await contentTopicsApi.update(mode.topic.id, values)
+      await api.update(mode.topic.id, values)
     } else {
-      await contentTopicsApi.create(page, values)
+      await api.create(values)
     }
     setMode({ type: "list" })
     load()
@@ -68,7 +72,7 @@ export function ContentTopicsPage({
     if (!deleteTarget) {
       return
     }
-    await contentTopicsApi.remove(deleteTarget.id)
+    await api.remove(deleteTarget.id)
     setDeleteTarget(null)
     load()
   }
@@ -95,15 +99,17 @@ export function ContentTopicsPage({
       </CardHeader>
       {mode.type === "list" ? (
         <TopicList
-          page={page}
           topics={topics}
           canWrite={canWrite}
+          canPrint={canPrint}
+          showMeta={showScheduling}
           onEdit={(topic) => setMode({ type: "edit", topic })}
           onDelete={setDeleteTarget}
         />
       ) : (
         <TopicEditor
-          page={page}
+          api={api}
+          showScheduling={showScheduling}
           topic={mode.type === "edit" ? mode.topic : null}
           onPublish={handlePublish}
           onCancel={() => setMode({ type: "list" })}

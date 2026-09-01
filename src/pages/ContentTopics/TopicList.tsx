@@ -3,24 +3,23 @@ import { Printer, Trash2 } from "lucide-react"
 import { TopicIcon } from "@/components/TopicIcon"
 import { Button } from "@/components/ui/button"
 import { printContent } from "@/lib/printContent"
-import type { ContentPageSlug, ContentTopic } from "@/types/config"
+import type { ContentTopic } from "@/types/config"
 
 export function TopicList({
-  page,
   topics,
   canWrite,
+  canPrint,
+  showMeta,
   onEdit,
   onDelete,
 }: {
-  page: ContentPageSlug
   topics: ContentTopic[]
   canWrite: boolean
+  canPrint: boolean
+  showMeta: boolean
   onEdit: (topic: ContentTopic) => void
   onDelete: (topic: ContentTopic) => void
 }) {
-  const canPrint = page !== "sakramenty"
-  const showMeta = page !== "sakramenty"
-
   return (
     <>
       <div className="grid gap-3 p-(--card-spacing)">

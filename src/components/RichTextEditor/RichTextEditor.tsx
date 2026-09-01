@@ -13,7 +13,7 @@ import TextAlign from "@tiptap/extension-text-align"
 import { TextStyleKit } from "@tiptap/extension-text-style"
 import Underline from "@tiptap/extension-underline"
 
-import { contentTopicsApi } from "@/api/contentTopics"
+import { contentImagesApi } from "@/api/contentImages"
 
 import { EditorToolbar } from "./EditorToolbar"
 import "./content.css"
@@ -55,7 +55,7 @@ export function RichTextEditor({
 
   async function handleImageUpload(file: File) {
     try {
-      const { url } = await contentTopicsApi.uploadImage(file)
+      const { url } = await contentImagesApi.uploadImage(file)
       editor?.chain().focus().setImage({ src: url }).run()
     } catch {
       // Upload failures are surfaced by leaving the image out; the user can retry.
