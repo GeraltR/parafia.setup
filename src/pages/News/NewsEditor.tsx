@@ -54,7 +54,7 @@ export function NewsEditor({
       date: news?.date ?? "",
       title: news?.title ?? "",
       excerpt: news?.excerpt ?? "",
-      image: news?.image ?? "",
+      image: news?.image ?? null,
       body: news?.body ?? "",
       showImageOnFullContent: news?.showImageOnFullContent ?? true,
       authorId: news?.author?.id ?? user?.id ?? 0,
@@ -165,7 +165,7 @@ export function NewsEditor({
             name="image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Obraz</FormLabel>
+                <FormLabel>Obraz (opcjonalnie)</FormLabel>
                 <div className="flex items-center gap-3">
                   <div
                     className="h-16 w-24 shrink-0 rounded-md border bg-muted bg-cover bg-center"

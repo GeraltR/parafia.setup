@@ -5,7 +5,7 @@ export interface NewsItemPayload {
   date: string
   title: string
   excerpt: string
-  image: string
+  image: string | null
   body: string
   showImageOnFullContent: boolean
   authorId: number
