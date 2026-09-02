@@ -96,7 +96,17 @@ export function EventEditor({
                 <FormItem>
                   <FormLabel>Godzina</FormLabel>
                   <FormControl>
-                    <Input placeholder="10:00" {...field} />
+                    <Input
+                      placeholder="10:00"
+                      {...field}
+                      onBlur={(e) => {
+                        const value = e.target.value.trim()
+                        if (/^\d{1,2}$/.test(value)) {
+                          field.onChange(`${value}:00`)
+                        }
+                        field.onBlur()
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -172,9 +172,9 @@ export interface InfoItem {
   title: string;
   shortInfo: string;
   description: string;
-  image: string;
-  progressValue: number;
-  progressDescription: string;
+  image: string | null;
+  progressValue: number | null;
+  progressDescription: string | null;
   information: string | null;
   bannerText: string | null;
   bannerFont: string | null;

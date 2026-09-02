@@ -59,9 +59,9 @@ export function InfoItemEditor({
       title: infoItem?.title ?? "",
       shortInfo: infoItem?.shortInfo ?? "",
       description: infoItem?.description ?? "",
-      image: infoItem?.image ?? "",
-      progressValue: infoItem?.progressValue ?? 0,
-      progressDescription: infoItem?.progressDescription ?? "",
+      image: infoItem?.image ?? null,
+      progressValue: infoItem?.progressValue ?? null,
+      progressDescription: infoItem?.progressDescription ?? null,
       information: infoItem?.information ?? null,
       bannerText: infoItem?.bannerText ?? null,
       bannerFont: infoItem?.bannerFont ?? null,
@@ -217,7 +217,7 @@ export function InfoItemEditor({
             name="image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Obrazek</FormLabel>
+                <FormLabel>Obrazek (opcjonalnie)</FormLabel>
                 <div className="flex items-center gap-3">
                   <div
                     className="h-16 w-24 shrink-0 rounded-md border bg-muted bg-cover bg-center"
@@ -248,14 +248,16 @@ export function InfoItemEditor({
               name="progressValue"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Postęp (0-100)</FormLabel>
+                  <FormLabel>Postęp (0-100, opcjonalnie)</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       min={0}
                       max={100}
-                      value={field.value}
-                      onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                      value={field.value ?? ""}
+                      onChange={(e) =>
+                        field.onChange(e.target.value === "" ? null : e.target.valueAsNumber)
+                      }
                     />
                   </FormControl>
                   <FormMessage />
@@ -267,15 +269,23 @@ export function InfoItemEditor({
               name="progressDescription"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Opis postępu</FormLabel>
+                  <FormLabel>Opis postępu (opcjonalnie)</FormLabel>
                   <FormControl>
-                    <Input placeholder="Postęp prac renowacyjnych" {...field} />
+                    <Input
+                      value={field.value ?? ""}
+                      onChange={(e) => field.onChange(e.target.value || null)}
+                      placeholder="Postęp prac renowacyjnych"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
+          <p className="text-xs text-muted-foreground">
+            Pasek postępu pokaże się na stronie tylko, gdy wypełnione są oba pola: wartość i opis
+            postępu.
+          </p>
           <FormField
             control={form.control}
             name="information"
