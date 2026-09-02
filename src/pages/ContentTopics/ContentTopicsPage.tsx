@@ -54,9 +54,10 @@ export function ContentTopicsPage({
   }
 
   useEffect(() => {
+    setMode({ type: "list" })
     load()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [api])
 
   async function handlePublish(values: TopicFormValues) {
     if (mode.type === "edit") {
