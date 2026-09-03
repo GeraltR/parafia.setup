@@ -1,8 +1,9 @@
-import { useRef, useState } from "react"
+import { useRef } from "react"
 import { Trash2 } from "lucide-react"
 import { useController, type Control } from "react-hook-form"
 
 import { associationsApi } from "@/api/associations"
+import { ImageCropModal } from "@/components/ImageCropModal"
 import { OrderSelect } from "@/components/OrderSelect"
 import { Button } from "@/components/ui/button"
 import {
@@ -14,6 +15,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useImageCropUpload } from "@/hooks/useImageCropUpload"
 
 import type { AssociationsFormValues } from "./schema"
 
@@ -30,10 +32,10 @@ export function AssociationRow({
   onRemove: () => void
   onMove: (position: number) => void
 }) {
-  const [uploading, setUploading] = useState(false)
-  const [uploadError, setUploadError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { field: imageField } = useController({ control, name: `items.${index}.imageUrl` })
+  const { imageSrc, selectFile, cancel: cancelCrop, confirm: confirmCrop, uploading, uploadError } =
+    useImageCropUpload(associationsApi.uploadImage)
 
   return (
     <div className={`grid gap-4 rounded-lg border p-4 ${index % 2 === 1 ? "bg-muted/40" : ""}`}>
@@ -49,25 +51,21 @@ export function AssociationRow({
             type="file"
             accept="image/*"
             disabled={uploading}
-            onChange={async (e) => {
+            onChange={(e) => {
               const file = e.target.files?.[0]
-              if (!file) return
-              setUploading(true)
-              setUploadError(null)
-              try {
-                const { url } = await associationsApi.uploadImage(file)
-                imageField.onChange(url)
-              } catch {
-                setUploadError("Nie udało się przesłać obrazka.")
-              } finally {
-                setUploading(false)
-                if (fileInputRef.current) fileInputRef.current.value = ""
-              }
+              if (file) selectFile(file)
+              if (fileInputRef.current) fileInputRef.current.value = ""
             }}
             className="text-xs file:mr-2 file:h-7 file:cursor-pointer file:rounded-md file:border-0 file:bg-primary file:px-2 file:text-xs file:font-medium file:text-primary-foreground"
           />
           {uploading && <span className="text-xs text-muted-foreground">Przesyłanie…</span>}
           {uploadError && <span className="text-xs text-destructive">{uploadError}</span>}
+          <ImageCropModal
+            imageSrc={imageSrc}
+            onCancel={cancelCrop}
+            onSave={(blob) => confirmCrop(blob, imageField.onChange)}
+            saving={uploading}
+          />
         </div>
 
         <div className="grid flex-1 grid-cols-2 gap-4">

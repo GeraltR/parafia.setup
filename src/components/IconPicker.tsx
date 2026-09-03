@@ -1,8 +1,10 @@
-import { useRef, useState } from "react"
+import { useRef } from "react"
 
 import { Icon, ICON_KEYS, type IconKey } from "@/components/Icon/icons"
+import { ImageCropModal } from "@/components/ImageCropModal"
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { useImageCropUpload } from "@/hooks/useImageCropUpload"
 
 export function IconPicker({
   icon,
@@ -17,25 +19,18 @@ export function IconPicker({
   onChange: (icon: string | null, iconUrl: string | null) => void
   onUpload: (file: File) => Promise<string>
 }) {
-  const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const activeKey = (icon as IconKey | null) ?? defaultIcon
+  const { imageSrc, selectFile, cancel: cancelCrop, confirm: confirmCrop, uploading } =
+    useImageCropUpload((file) => onUpload(file).then((url) => ({ url })))
 
-  async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
-    if (!file) {
-      return
+    if (file) {
+      selectFile(file)
     }
-
-    setUploading(true)
-    try {
-      const url = await onUpload(file)
-      onChange(null, url)
-    } finally {
-      setUploading(false)
-      if (fileInputRef.current) {
-        fileInputRef.current.value = ""
-      }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
     }
   }
 
@@ -83,6 +78,12 @@ export function IconPicker({
           </Button>
         )}
       </PopoverContent>
+      <ImageCropModal
+        imageSrc={imageSrc}
+        onCancel={cancelCrop}
+        onSave={(blob) => confirmCrop(blob, (url) => onChange(null, url))}
+        saving={uploading}
+      />
     </Popover>
   )
 }

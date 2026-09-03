@@ -14,6 +14,8 @@ import { TextStyleKit } from "@tiptap/extension-text-style"
 import Underline from "@tiptap/extension-underline"
 
 import { contentImagesApi } from "@/api/contentImages"
+import { ImageCropModal } from "@/components/ImageCropModal"
+import { useImageCropUpload } from "@/hooks/useImageCropUpload"
 
 import { EditorToolbar } from "./EditorToolbar"
 import "./content.css"
@@ -53,13 +55,11 @@ export function RichTextEditor({
     }
   }, [editable, editor])
 
-  async function handleImageUpload(file: File) {
-    try {
-      const { url } = await contentImagesApi.uploadImage(file)
-      editor?.chain().focus().setImage({ src: url }).run()
-    } catch {
-      // Upload failures are surfaced by leaving the image out; the user can retry.
-    }
+  const { imageSrc, selectFile, cancel: cancelCrop, confirm: confirmCrop, uploading } =
+    useImageCropUpload(contentImagesApi.uploadImage)
+
+  function handleCropSave(blob: Blob) {
+    confirmCrop(blob, (url) => editor?.chain().focus().setImage({ src: url }).run())
   }
 
   if (!editor) {
@@ -68,8 +68,14 @@ export function RichTextEditor({
 
   return (
     <div className="rounded-lg border">
-      {editable && <EditorToolbar editor={editor} onImageUpload={handleImageUpload} />}
+      {editable && <EditorToolbar editor={editor} onImageUpload={selectFile} />}
       <EditorContent editor={editor} className="content-editor min-h-48 p-4 focus:outline-none" />
+      <ImageCropModal
+        imageSrc={imageSrc}
+        onCancel={cancelCrop}
+        onSave={handleCropSave}
+        saving={uploading}
+      />
     </div>
   )
 }

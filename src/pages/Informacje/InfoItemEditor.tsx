@@ -7,6 +7,7 @@ import { fontsApi, type FontFamily } from "@/api/fonts"
 import { usersApi } from "@/api/users"
 import { ColorField } from "@/components/ColorField"
 import { DatePicker } from "@/components/DatePicker"
+import { ImageCropModal } from "@/components/ImageCropModal"
 import { NullableFontSelect } from "@/components/NullableFontSelect"
 import { RichTextEditor } from "@/components/RichTextEditor/RichTextEditor"
 import { Button } from "@/components/ui/button"
@@ -29,6 +30,7 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { useAuth } from "@/context/useAuth"
+import { useImageCropUpload } from "@/hooks/useImageCropUpload"
 import type { AuthUser } from "@/types/auth"
 import type { InfoItem } from "@/types/config"
 
@@ -47,8 +49,6 @@ export function InfoItemEditor({
   const [users, setUsers] = useState<AuthUser[]>([])
   const [fonts, setFonts] = useState<FontFamily[]>([])
   const [error, setError] = useState<string | null>(null)
-  const [uploading, setUploading] = useState(false)
-  const [uploadError, setUploadError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const form = useForm<InfoItemFormValues>({
@@ -72,6 +72,19 @@ export function InfoItemEditor({
     },
   })
 
+  const {
+    imageSrc,
+    selectFile,
+    cancel: cancelCrop,
+    confirm: confirmCrop,
+    uploading,
+    uploadError,
+  } = useImageCropUpload(informacjeApi.uploadImage)
+
+  function handleCropSave(blob: Blob) {
+    confirmCrop(blob, (url) => form.setValue("image", url, { shouldDirty: true, shouldValidate: true }))
+  }
+
   useEffect(() => {
     usersApi
       .list()
@@ -83,27 +96,13 @@ export function InfoItemEditor({
       .catch(() => setFonts([]))
   }, [])
 
-  async function handleImageChange(
-    event: React.ChangeEvent<HTMLInputElement>,
-    onChange: (value: string) => void
-  ) {
+  function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
-    if (!file) {
-      return
+    if (file) {
+      selectFile(file)
     }
-
-    setUploading(true)
-    setUploadError(null)
-    try {
-      const { url } = await informacjeApi.uploadImage(file)
-      onChange(url)
-    } catch {
-      setUploadError("Nie udało się przesłać obrazu.")
-    } finally {
-      setUploading(false)
-      if (fileInputRef.current) {
-        fileInputRef.current.value = ""
-      }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
     }
   }
 
@@ -228,7 +227,7 @@ export function InfoItemEditor({
                       ref={fileInputRef}
                       type="file"
                       accept="image/*"
-                      onChange={(e) => handleImageChange(e, field.onChange)}
+                      onChange={handleImageChange}
                       disabled={uploading}
                       className="text-sm file:mr-3 file:h-8 file:cursor-pointer file:rounded-lg file:border-0 file:bg-primary file:px-2.5 file:text-sm file:font-medium file:text-primary-foreground"
                     />
@@ -376,6 +375,12 @@ export function InfoItemEditor({
           </Button>
         </CardFooter>
       </form>
+      <ImageCropModal
+        imageSrc={imageSrc}
+        onCancel={cancelCrop}
+        onSave={handleCropSave}
+        saving={uploading}
+      />
     </Form>
   )
 }

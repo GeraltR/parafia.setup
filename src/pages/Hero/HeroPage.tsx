@@ -3,12 +3,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useFieldArray, useForm } from "react-hook-form"
 
 import { heroApi } from "@/api/hero"
+import { ImageCropModal } from "@/components/ImageCropModal"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/context/useAuth"
+import { useImageCropUpload } from "@/hooks/useImageCropUpload"
 import { useFonts } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 
@@ -21,8 +23,6 @@ export function HeroPage() {
   const canWrite = user?.canWrite.site ?? false
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [saveError, setSaveError] = useState<string | null>(null)
-  const [uploading, setUploading] = useState(false)
-  const [uploadError, setUploadError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const fonts = useFonts()
 
@@ -66,24 +66,28 @@ export function HeroPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0]
-    if (!file) {
-      return
-    }
+  const {
+    imageSrc,
+    selectFile,
+    cancel: cancelCrop,
+    confirm: confirmCrop,
+    uploading,
+    uploadError,
+  } = useImageCropUpload(heroApi.uploadBackgroundImage)
 
-    setUploading(true)
-    setUploadError(null)
-    try {
-      const { url } = await heroApi.uploadBackgroundImage(file)
+  function handleCropSave(blob: Blob) {
+    confirmCrop(blob, (url) =>
       form.setValue("backgroundImage", url, { shouldDirty: true, shouldValidate: true })
-    } catch {
-      setUploadError("Nie udało się przesłać obrazu.")
-    } finally {
-      setUploading(false)
-      if (fileInputRef.current) {
-        fileInputRef.current.value = ""
-      }
+    )
+  }
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (file) {
+      selectFile(file)
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
     }
   }
 
@@ -219,6 +223,12 @@ export function HeroPage() {
           </CardFooter>
         </form>
       </Form>
+      <ImageCropModal
+        imageSrc={imageSrc}
+        onCancel={cancelCrop}
+        onSave={handleCropSave}
+        saving={uploading}
+      />
     </Card>
   )
 }

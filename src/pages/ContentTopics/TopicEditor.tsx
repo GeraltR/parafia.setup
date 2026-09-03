@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 import type { TopicsApi } from "@/api/contentTopics"
 import { usersApi } from "@/api/users"
 import { DatePicker } from "@/components/DatePicker"
+import { ImageCropModal } from "@/components/ImageCropModal"
 import { RichTextEditor } from "@/components/RichTextEditor/RichTextEditor"
 import { Button } from "@/components/ui/button"
 import { CardContent, CardFooter } from "@/components/ui/card"
@@ -25,6 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useAuth } from "@/context/useAuth"
+import { useImageCropUpload } from "@/hooks/useImageCropUpload"
 import type { AuthUser } from "@/types/auth"
 import type { ContentTopic } from "@/types/config"
 
@@ -51,8 +53,6 @@ export function TopicEditor({
   const { user } = useAuth()
   const [users, setUsers] = useState<AuthUser[]>([])
   const [error, setError] = useState<string | null>(null)
-  const [uploadingIcon, setUploadingIcon] = useState(false)
-  const [iconUploadError, setIconUploadError] = useState<string | null>(null)
   const iconInputRef = useRef<HTMLInputElement>(null)
 
   const form = useForm<TopicFormValues>({
@@ -66,6 +66,21 @@ export function TopicEditor({
     },
   })
 
+  const {
+    imageSrc: iconSrc,
+    selectFile: selectIconFile,
+    cancel: cancelIconCrop,
+    confirm: confirmIconCrop,
+    uploading: uploadingIcon,
+    uploadError: iconUploadError,
+  } = useImageCropUpload(api.uploadImage)
+
+  function handleIconCropSave(blob: Blob) {
+    confirmIconCrop(blob, (url) =>
+      form.setValue("iconUrl", url, { shouldDirty: true, shouldValidate: true })
+    )
+  }
+
   useEffect(() => {
     usersApi
       .list()
@@ -73,27 +88,13 @@ export function TopicEditor({
       .catch(() => setUsers([]))
   }, [])
 
-  async function handleIconChange(
-    event: React.ChangeEvent<HTMLInputElement>,
-    onChange: (value: string) => void
-  ) {
+  function handleIconChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
-    if (!file) {
-      return
+    if (file) {
+      selectIconFile(file)
     }
-
-    setUploadingIcon(true)
-    setIconUploadError(null)
-    try {
-      const { url } = await api.uploadImage(file)
-      onChange(url)
-    } catch {
-      setIconUploadError("Nie udało się przesłać ikony.")
-    } finally {
-      setUploadingIcon(false)
-      if (iconInputRef.current) {
-        iconInputRef.current.value = ""
-      }
+    if (iconInputRef.current) {
+      iconInputRef.current.value = ""
     }
   }
 
@@ -140,7 +141,7 @@ export function TopicEditor({
                         ref={iconInputRef}
                         type="file"
                         accept="image/*"
-                        onChange={(e) => handleIconChange(e, field.onChange)}
+                        onChange={handleIconChange}
                         disabled={uploadingIcon}
                         className="text-sm file:mr-3 file:h-8 file:cursor-pointer file:rounded-lg file:border-0 file:bg-primary file:px-2.5 file:text-sm file:font-medium file:text-primary-foreground"
                       />
@@ -250,6 +251,12 @@ export function TopicEditor({
           </Button>
         </CardFooter>
       </form>
+      <ImageCropModal
+        imageSrc={iconSrc}
+        onCancel={cancelIconCrop}
+        onSave={handleIconCropSave}
+        saving={uploadingIcon}
+      />
     </Form>
   )
 }

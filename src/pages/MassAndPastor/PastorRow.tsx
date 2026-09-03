@@ -1,8 +1,9 @@
-import { useRef, useState } from "react"
+import { useRef } from "react"
 import { Trash2 } from "lucide-react"
 import type { Control } from "react-hook-form"
 
 import { massAndPastorApi } from "@/api/massAndPastor"
+import { ImageCropModal } from "@/components/ImageCropModal"
 import { RichTextEditor } from "@/components/RichTextEditor/RichTextEditor"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import { useImageCropUpload } from "@/hooks/useImageCropUpload"
 
 import type { MassAndPastorFormValues } from "./schema"
 
@@ -29,9 +31,9 @@ export function PastorRow({
   onRemove: () => void
   canWrite: boolean
 }) {
-  const [uploading, setUploading] = useState(false)
-  const [uploadError, setUploadError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { imageSrc, selectFile, cancel: cancelCrop, confirm: confirmCrop, uploading, uploadError } =
+    useImageCropUpload(massAndPastorApi.uploadPhoto)
 
   return (
     <div className={`grid gap-4 rounded-lg border p-4 ${index % 2 === 1 ? "bg-muted/40" : ""}`}>
@@ -90,26 +92,22 @@ export function PastorRow({
                 type="file"
                 accept="image/*"
                 disabled={uploading}
-                onChange={async (e) => {
+                onChange={(e) => {
                   const file = e.target.files?.[0]
-                  if (!file) return
-                  setUploading(true)
-                  setUploadError(null)
-                  try {
-                    const { url } = await massAndPastorApi.uploadPhoto(file)
-                    field.onChange(url)
-                  } catch {
-                    setUploadError("Nie udało się przesłać zdjęcia.")
-                  } finally {
-                    setUploading(false)
-                    if (fileInputRef.current) fileInputRef.current.value = ""
-                  }
+                  if (file) selectFile(file)
+                  if (fileInputRef.current) fileInputRef.current.value = ""
                 }}
                 className="text-sm file:mr-3 file:h-8 file:cursor-pointer file:rounded-lg file:border-0 file:bg-primary file:px-2.5 file:text-sm file:font-medium file:text-primary-foreground"
               />
               {uploading && <span className="text-sm text-muted-foreground">Przesyłanie…</span>}
             </div>
             {uploadError && <span className="text-sm text-destructive">{uploadError}</span>}
+            <ImageCropModal
+              imageSrc={imageSrc}
+              onCancel={cancelCrop}
+              onSave={(blob) => confirmCrop(blob, field.onChange)}
+              saving={uploading}
+            />
           </div>
         )}
       />
