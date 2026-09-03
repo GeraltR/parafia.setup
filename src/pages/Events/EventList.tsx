@@ -16,7 +16,7 @@ export function EventList({
 }) {
   return (
     <>
-      <div className="grid gap-3 p-(--card-spacing)">
+      <div className="grid grid-cols-1 gap-3 p-(--card-spacing)">
         {events.length === 0 && (
           <p className="text-sm text-muted-foreground">Brak wydarzeń.</p>
         )}

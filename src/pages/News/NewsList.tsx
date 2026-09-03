@@ -3,6 +3,8 @@ import { Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { NewsItem } from "@/types/config"
 
+const DEFAULT_NEWS_IMAGE = "/img/elzbieta_czysta.jpg"
+
 export function NewsList({
   news,
   canWrite,
@@ -16,7 +18,7 @@ export function NewsList({
 }) {
   return (
     <>
-      <div className="grid gap-3 p-(--card-spacing)">
+      <div className="grid grid-cols-1 gap-3 p-(--card-spacing)">
         {news.length === 0 && (
           <p className="text-sm text-muted-foreground">Brak aktualności.</p>
         )}
@@ -29,7 +31,7 @@ export function NewsList({
           >
             <div
               className="h-12 w-16 shrink-0 rounded-md border bg-muted bg-cover bg-center"
-              style={item.image ? { backgroundImage: `url(${item.image})` } : undefined}
+              style={{ backgroundImage: `url(${item.image ?? DEFAULT_NEWS_IMAGE})` }}
             />
             <div className="min-w-0 flex-1">
               <p className="truncate font-medium">{item.title}</p>

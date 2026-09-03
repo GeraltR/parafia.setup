@@ -66,7 +66,7 @@ export function IntentionList({
           </Button>
         )}
       </CardAction>
-      <div className="grid gap-4 p-(--card-spacing)">
+      <div className="grid grid-cols-1 gap-4 p-(--card-spacing)">
         {groups.length === 0 && (
           <p className="text-sm text-muted-foreground">Brak intencji.</p>
         )}

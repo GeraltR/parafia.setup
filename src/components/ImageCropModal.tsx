@@ -42,7 +42,7 @@ export function ImageCropModal({
 
   return (
     <Dialog open={imageSrc !== null} onOpenChange={(open) => !open && onCancel()}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Kadrowanie obrazu</DialogTitle>
         </DialogHeader>

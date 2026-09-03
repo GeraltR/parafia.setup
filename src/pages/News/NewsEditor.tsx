@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
+import { Eye } from "lucide-react"
+
 import { newsApi } from "@/api/news"
 import { usersApi } from "@/api/users"
 import { DatePicker } from "@/components/DatePicker"
@@ -32,6 +34,7 @@ import { useImageCropUpload } from "@/hooks/useImageCropUpload"
 import type { AuthUser } from "@/types/auth"
 import type { NewsItem } from "@/types/config"
 
+import { NewsPreviewModal } from "./NewsPreviewModal"
 import { newsSchema, type NewsFormValues } from "./schema"
 
 export function NewsEditor({
@@ -46,6 +49,7 @@ export function NewsEditor({
   const { user } = useAuth()
   const [users, setUsers] = useState<AuthUser[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [previewValues, setPreviewValues] = useState<NewsFormValues | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const form = useForm<NewsFormValues>({
@@ -232,6 +236,14 @@ export function NewsEditor({
           <Button type="button" variant="outline" onClick={onCancel}>
             Anuluj
           </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="ml-auto"
+            onClick={() => setPreviewValues(form.getValues())}
+          >
+            <Eye /> Podgląd
+          </Button>
         </CardFooter>
       </form>
       <ImageCropModal
@@ -239,6 +251,13 @@ export function NewsEditor({
         onCancel={cancelCrop}
         onSave={handleCropSave}
         saving={uploading}
+      />
+      <NewsPreviewModal
+        values={previewValues}
+        authorName={
+          users.find((u) => u.id === previewValues?.authorId)?.name ?? user?.name ?? null
+        }
+        onClose={() => setPreviewValues(null)}
       />
     </Form>
   )

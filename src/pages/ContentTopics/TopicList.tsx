@@ -22,7 +22,7 @@ export function TopicList({
 }) {
   return (
     <>
-      <div className="grid gap-3 p-(--card-spacing)">
+      <div className="grid grid-cols-1 gap-3 p-(--card-spacing)">
         {topics.length === 0 && (
           <p className="text-sm text-muted-foreground">Brak tematów w tej sekcji.</p>
         )}
