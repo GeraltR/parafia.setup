@@ -23,7 +23,7 @@ export const navGroups: NavGroup[] = [
   {
     label: "Treści",
     items: [
-      { to: "/events", label: "Wydarzenia" },
+      { to: "/events", label: "Ważne informacje" },
       { to: "/news", label: "Aktualności" },
       { to: "/mass-intentions", label: "Intencje mszalne" },
       { to: "/informacje", label: "Informacje dodatkowe" },

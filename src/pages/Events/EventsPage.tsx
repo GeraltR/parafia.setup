@@ -74,7 +74,7 @@ export function EventsPage() {
   return (
     <Card className="max-w-3xl overflow-visible">
       <CardHeader>
-        <CardTitle>Najbliższe wydarzenia</CardTitle>
+        <CardTitle>Ważne informacje</CardTitle>
         {mode.type === "list" && canWrite && (
           <CardAction>
             <Button type="button" size="sm" onClick={() => setMode({ type: "new" })}>
