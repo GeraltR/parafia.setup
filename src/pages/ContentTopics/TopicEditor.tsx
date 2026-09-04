@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
-import { Images } from "lucide-react"
+import { Images, X } from "lucide-react"
 
 import type { TopicsApi } from "@/api/contentTopics"
 import { usersApi } from "@/api/users"
@@ -158,6 +158,16 @@ export function TopicEditor({
                         >
                           <Images /> Galeria
                         </Button>
+                        {field.value && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => field.onChange(null)}
+                          >
+                            <X /> Usuń
+                          </Button>
+                        )}
                       </div>
                       {uploadingIcon && (
                         <span className="text-sm text-muted-foreground">Przesyłanie…</span>

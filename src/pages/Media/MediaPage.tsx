@@ -39,7 +39,8 @@ function formatDatePl(iso: string | null): string {
 
 export function MediaPage() {
   const { user } = useAuth()
-  const canWrite = user?.canWrite.content ?? false
+  const canUpload = user?.canWrite.content ?? false
+  const canDelete = user?.canWrite.site ?? false
   const [items, setItems] = useState<MediaItem[]>([])
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [deleteTarget, setDeleteTarget] = useState<MediaItem | null>(null)
@@ -98,7 +99,7 @@ export function MediaPage() {
     <Card className="max-w-4xl overflow-visible">
       <CardHeader>
         <CardTitle>Galeria</CardTitle>
-        {canWrite && (
+        {canUpload && (
           <CardAction>
             <input
               ref={fileInputRef}
@@ -142,7 +143,7 @@ export function MediaPage() {
                 </p>
                 <p className="truncate text-xs text-muted-foreground">{formatDatePl(item.createdAt)}</p>
               </div>
-              {canWrite && (
+              {canDelete && (
                 <Button
                   type="button"
                   variant="destructive"

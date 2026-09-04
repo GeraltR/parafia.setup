@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useFieldArray, useForm } from "react-hook-form"
 
-import { Images } from "lucide-react"
+import { Images, X } from "lucide-react"
 
 import { heroApi } from "@/api/hero"
 import { ImageCropModal } from "@/components/ImageCropModal"
@@ -148,6 +148,19 @@ export function HeroPage() {
                 >
                   <Images /> Galeria
                 </Button>
+                {backgroundImage && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={!canWrite}
+                    onClick={() =>
+                      form.setValue("backgroundImage", "", { shouldDirty: true, shouldValidate: true })
+                    }
+                  >
+                    <X /> Usuń
+                  </Button>
+                )}
                 {uploading && (
                   <span className="text-sm text-muted-foreground">Przesyłanie…</span>
                 )}

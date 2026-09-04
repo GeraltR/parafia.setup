@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
-import { Images } from "lucide-react"
+import { Images, X } from "lucide-react"
 
 import { informacjeApi } from "@/api/informacje"
 import { fontsApi, type FontFamily } from "@/api/fonts"
@@ -244,6 +244,16 @@ export function InfoItemEditor({
                       >
                         <Images /> Galeria
                       </Button>
+                      {field.value && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => field.onChange(null)}
+                        >
+                          <X /> Usuń
+                        </Button>
+                      )}
                     </div>
                     {uploading && (
                       <span className="text-sm text-muted-foreground">Przesyłanie…</span>

@@ -1,5 +1,5 @@
 import { useRef, useState } from "react"
-import { Images, Trash2 } from "lucide-react"
+import { Images, Trash2, X } from "lucide-react"
 import { useController, type Control } from "react-hook-form"
 
 import { associationsApi } from "@/api/associations"
@@ -63,6 +63,16 @@ export function AssociationRow({
           <Button type="button" variant="outline" size="sm" onClick={() => setPickerOpen(true)}>
             <Images /> Galeria
           </Button>
+          {imageField.value && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => imageField.onChange(null)}
+            >
+              <X /> Usuń
+            </Button>
+          )}
           {uploading && <span className="text-xs text-muted-foreground">Przesyłanie…</span>}
           {uploadError && <span className="text-xs text-destructive">{uploadError}</span>}
           <ImageCropModal

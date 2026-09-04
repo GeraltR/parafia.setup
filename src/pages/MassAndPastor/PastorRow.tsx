@@ -1,5 +1,5 @@
 import { useRef, useState } from "react"
-import { Images, Trash2 } from "lucide-react"
+import { Images, Trash2, X } from "lucide-react"
 import type { Control } from "react-hook-form"
 
 import { massAndPastorApi } from "@/api/massAndPastor"
@@ -104,6 +104,16 @@ export function PastorRow({
               <Button type="button" variant="outline" size="sm" onClick={() => setPickerOpen(true)}>
                 <Images /> Galeria
               </Button>
+              {field.value && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => field.onChange(null)}
+                >
+                  <X /> Usuń
+                </Button>
+              )}
               {uploading && <span className="text-sm text-muted-foreground">Przesyłanie…</span>}
             </div>
             {uploadError && <span className="text-sm text-destructive">{uploadError}</span>}

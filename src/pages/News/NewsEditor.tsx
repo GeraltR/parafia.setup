@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
-import { Eye, Images } from "lucide-react"
+import { Eye, Images, X } from "lucide-react"
 
 import { newsApi } from "@/api/news"
 import { usersApi } from "@/api/users"
@@ -194,6 +194,16 @@ export function NewsEditor({
                       >
                         <Images /> Galeria
                       </Button>
+                      {field.value && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => field.onChange(null)}
+                        >
+                          <X /> Usuń
+                        </Button>
+                      )}
                     </div>
                     {uploading && (
                       <span className="text-sm text-muted-foreground">Przesyłanie…</span>
