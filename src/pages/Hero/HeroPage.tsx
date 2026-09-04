@@ -2,8 +2,11 @@ import { useEffect, useRef, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useFieldArray, useForm } from "react-hook-form"
 
+import { Images } from "lucide-react"
+
 import { heroApi } from "@/api/hero"
 import { ImageCropModal } from "@/components/ImageCropModal"
+import { MediaPickerModal } from "@/components/MediaPickerModal"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form"
@@ -23,6 +26,7 @@ export function HeroPage() {
   const canWrite = user?.canWrite.site ?? false
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [saveError, setSaveError] = useState<string | null>(null)
+  const [pickerOpen, setPickerOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const fonts = useFonts()
 
@@ -135,6 +139,15 @@ export function HeroPage() {
                   disabled={uploading || !canWrite}
                   className="text-sm file:mr-3 file:h-8 file:cursor-pointer file:rounded-lg file:border-0 file:bg-primary file:px-2.5 file:text-sm file:font-medium file:text-primary-foreground"
                 />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={!canWrite}
+                  onClick={() => setPickerOpen(true)}
+                >
+                  <Images /> Galeria
+                </Button>
                 {uploading && (
                   <span className="text-sm text-muted-foreground">Przesyłanie…</span>
                 )}
@@ -228,6 +241,13 @@ export function HeroPage() {
         onCancel={cancelCrop}
         onSave={handleCropSave}
         saving={uploading}
+      />
+      <MediaPickerModal
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={(url) =>
+          form.setValue("backgroundImage", url, { shouldDirty: true, shouldValidate: true })
+        }
       />
     </Card>
   )

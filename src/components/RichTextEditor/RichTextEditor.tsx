@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { EditorContent, useEditor } from "@tiptap/react"
 import Image from "@tiptap/extension-image"
 import Link from "@tiptap/extension-link"
@@ -15,6 +15,7 @@ import Underline from "@tiptap/extension-underline"
 
 import { contentImagesApi } from "@/api/contentImages"
 import { ImageCropModal } from "@/components/ImageCropModal"
+import { MediaPickerModal } from "@/components/MediaPickerModal"
 import { useImageCropUpload } from "@/hooks/useImageCropUpload"
 
 import { EditorToolbar } from "./EditorToolbar"
@@ -55,6 +56,7 @@ export function RichTextEditor({
     }
   }, [editable, editor])
 
+  const [pickerOpen, setPickerOpen] = useState(false)
   const { imageSrc, selectFile, cancel: cancelCrop, confirm: confirmCrop, uploading } =
     useImageCropUpload(contentImagesApi.uploadImage)
 
@@ -68,13 +70,24 @@ export function RichTextEditor({
 
   return (
     <div className="rounded-lg border">
-      {editable && <EditorToolbar editor={editor} onImageUpload={selectFile} />}
+      {editable && (
+        <EditorToolbar
+          editor={editor}
+          onImageUpload={selectFile}
+          onOpenGallery={() => setPickerOpen(true)}
+        />
+      )}
       <EditorContent editor={editor} className="content-editor min-h-48 p-4 focus:outline-none" />
       <ImageCropModal
         imageSrc={imageSrc}
         onCancel={cancelCrop}
         onSave={handleCropSave}
         saving={uploading}
+      />
+      <MediaPickerModal
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={(url) => editor.chain().focus().setImage({ src: url }).run()}
       />
     </div>
   )

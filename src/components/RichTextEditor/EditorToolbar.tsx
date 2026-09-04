@@ -6,6 +6,7 @@ import {
   AlignRight,
   Bold,
   ImagePlus,
+  Images,
   Italic,
   Link2,
   List,
@@ -146,9 +147,11 @@ function ColorPopover({ editor }: { editor: Editor }) {
 export function EditorToolbar({
   editor,
   onImageUpload,
+  onOpenGallery,
 }: {
   editor: Editor
   onImageUpload: (file: File) => void
+  onOpenGallery: () => void
 }) {
   const fonts = useFonts()
 
@@ -302,6 +305,10 @@ export function EditorToolbar({
         <ImagePlus />
         <input type="file" accept="image/*" className="hidden" onChange={handleImageInputChange} />
       </label>
+
+      <ToolbarButton title="Wstaw obraz z galerii" onClick={onOpenGallery}>
+        <Images />
+      </ToolbarButton>
 
       <ToolbarButton
         title="Wstaw tabelę"

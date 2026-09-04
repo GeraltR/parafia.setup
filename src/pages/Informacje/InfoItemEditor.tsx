@@ -2,12 +2,15 @@ import { useEffect, useRef, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
+import { Images } from "lucide-react"
+
 import { informacjeApi } from "@/api/informacje"
 import { fontsApi, type FontFamily } from "@/api/fonts"
 import { usersApi } from "@/api/users"
 import { ColorField } from "@/components/ColorField"
 import { DatePicker } from "@/components/DatePicker"
 import { ImageCropModal } from "@/components/ImageCropModal"
+import { MediaPickerModal } from "@/components/MediaPickerModal"
 import { NullableFontSelect } from "@/components/NullableFontSelect"
 import { RichTextEditor } from "@/components/RichTextEditor/RichTextEditor"
 import { Button } from "@/components/ui/button"
@@ -49,6 +52,7 @@ export function InfoItemEditor({
   const [users, setUsers] = useState<AuthUser[]>([])
   const [fonts, setFonts] = useState<FontFamily[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [pickerOpen, setPickerOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const form = useForm<InfoItemFormValues>({
@@ -223,14 +227,24 @@ export function InfoItemEditor({
                     style={field.value ? { backgroundImage: `url(${field.value})` } : undefined}
                   />
                   <div className="grid gap-1">
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      disabled={uploading}
-                      className="text-sm file:mr-3 file:h-8 file:cursor-pointer file:rounded-lg file:border-0 file:bg-primary file:px-2.5 file:text-sm file:font-medium file:text-primary-foreground"
-                    />
+                    <div className="flex items-center gap-2">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        disabled={uploading}
+                        className="text-sm file:mr-3 file:h-8 file:cursor-pointer file:rounded-lg file:border-0 file:bg-primary file:px-2.5 file:text-sm file:font-medium file:text-primary-foreground"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setPickerOpen(true)}
+                      >
+                        <Images /> Galeria
+                      </Button>
+                    </div>
                     {uploading && (
                       <span className="text-sm text-muted-foreground">Przesyłanie…</span>
                     )}
@@ -380,6 +394,11 @@ export function InfoItemEditor({
         onCancel={cancelCrop}
         onSave={handleCropSave}
         saving={uploading}
+      />
+      <MediaPickerModal
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={(url) => form.setValue("image", url, { shouldDirty: true, shouldValidate: true })}
       />
     </Form>
   )

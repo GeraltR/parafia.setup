@@ -2,12 +2,13 @@ import { useEffect, useRef, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
-import { Eye } from "lucide-react"
+import { Eye, Images } from "lucide-react"
 
 import { newsApi } from "@/api/news"
 import { usersApi } from "@/api/users"
 import { DatePicker } from "@/components/DatePicker"
 import { ImageCropModal } from "@/components/ImageCropModal"
+import { MediaPickerModal } from "@/components/MediaPickerModal"
 import { RichTextEditor } from "@/components/RichTextEditor/RichTextEditor"
 import { Button } from "@/components/ui/button"
 import { CardContent, CardFooter } from "@/components/ui/card"
@@ -50,6 +51,7 @@ export function NewsEditor({
   const [users, setUsers] = useState<AuthUser[]>([])
   const [error, setError] = useState<string | null>(null)
   const [previewValues, setPreviewValues] = useState<NewsFormValues | null>(null)
+  const [pickerOpen, setPickerOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const form = useForm<NewsFormValues>({
@@ -175,14 +177,24 @@ export function NewsEditor({
                     style={field.value ? { backgroundImage: `url(${field.value})` } : undefined}
                   />
                   <div className="grid gap-1">
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      disabled={uploading}
-                      className="text-sm file:mr-3 file:h-8 file:cursor-pointer file:rounded-lg file:border-0 file:bg-primary file:px-2.5 file:text-sm file:font-medium file:text-primary-foreground"
-                    />
+                    <div className="flex items-center gap-2">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        disabled={uploading}
+                        className="text-sm file:mr-3 file:h-8 file:cursor-pointer file:rounded-lg file:border-0 file:bg-primary file:px-2.5 file:text-sm file:font-medium file:text-primary-foreground"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setPickerOpen(true)}
+                      >
+                        <Images /> Galeria
+                      </Button>
+                    </div>
                     {uploading && (
                       <span className="text-sm text-muted-foreground">Przesyłanie…</span>
                     )}
@@ -251,6 +263,11 @@ export function NewsEditor({
         onCancel={cancelCrop}
         onSave={handleCropSave}
         saving={uploading}
+      />
+      <MediaPickerModal
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={(url) => form.setValue("image", url, { shouldDirty: true, shouldValidate: true })}
       />
       <NewsPreviewModal
         values={previewValues}

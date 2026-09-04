@@ -1,9 +1,10 @@
-import { useRef } from "react"
-import { Trash2 } from "lucide-react"
+import { useRef, useState } from "react"
+import { Images, Trash2 } from "lucide-react"
 import { useController, type Control } from "react-hook-form"
 
 import { associationsApi } from "@/api/associations"
 import { ImageCropModal } from "@/components/ImageCropModal"
+import { MediaPickerModal } from "@/components/MediaPickerModal"
 import { OrderSelect } from "@/components/OrderSelect"
 import { Button } from "@/components/ui/button"
 import {
@@ -33,6 +34,7 @@ export function AssociationRow({
   onMove: (position: number) => void
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [pickerOpen, setPickerOpen] = useState(false)
   const { field: imageField } = useController({ control, name: `items.${index}.imageUrl` })
   const { imageSrc, selectFile, cancel: cancelCrop, confirm: confirmCrop, uploading, uploadError } =
     useImageCropUpload(associationsApi.uploadImage)
@@ -58,6 +60,9 @@ export function AssociationRow({
             }}
             className="text-xs file:mr-2 file:h-7 file:cursor-pointer file:rounded-md file:border-0 file:bg-primary file:px-2 file:text-xs file:font-medium file:text-primary-foreground"
           />
+          <Button type="button" variant="outline" size="sm" onClick={() => setPickerOpen(true)}>
+            <Images /> Galeria
+          </Button>
           {uploading && <span className="text-xs text-muted-foreground">Przesyłanie…</span>}
           {uploadError && <span className="text-xs text-destructive">{uploadError}</span>}
           <ImageCropModal
@@ -65,6 +70,11 @@ export function AssociationRow({
             onCancel={cancelCrop}
             onSave={(blob) => confirmCrop(blob, imageField.onChange)}
             saving={uploading}
+          />
+          <MediaPickerModal
+            open={pickerOpen}
+            onClose={() => setPickerOpen(false)}
+            onSelect={imageField.onChange}
           />
         </div>
 

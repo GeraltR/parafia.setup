@@ -1,7 +1,9 @@
-import { useRef } from "react"
+import { useRef, useState } from "react"
+import { Images } from "lucide-react"
 
 import { Icon, ICON_KEYS, type IconKey } from "@/components/Icon/icons"
 import { ImageCropModal } from "@/components/ImageCropModal"
+import { MediaPickerModal } from "@/components/MediaPickerModal"
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { useImageCropUpload } from "@/hooks/useImageCropUpload"
@@ -20,6 +22,7 @@ export function IconPicker({
   onUpload: (file: File) => Promise<string>
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [pickerOpen, setPickerOpen] = useState(false)
   const activeKey = (icon as IconKey | null) ?? defaultIcon
   const { imageSrc, selectFile, cancel: cancelCrop, confirm: confirmCrop, uploading } =
     useImageCropUpload((file) => onUpload(file).then((url) => ({ url })))
@@ -72,6 +75,9 @@ export function IconPicker({
           />
           {uploading && <span className="text-xs text-muted-foreground">Przesyłanie…</span>}
         </div>
+        <Button type="button" variant="outline" size="sm" onClick={() => setPickerOpen(true)}>
+          <Images /> Galeria
+        </Button>
         {(icon !== null || iconUrl !== null) && (
           <Button type="button" variant="ghost" size="sm" onClick={() => onChange(null, null)}>
             Domyślna
@@ -83,6 +89,11 @@ export function IconPicker({
         onCancel={cancelCrop}
         onSave={(blob) => confirmCrop(blob, (url) => onChange(null, url))}
         saving={uploading}
+      />
+      <MediaPickerModal
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={(url) => onChange(null, url)}
       />
     </Popover>
   )

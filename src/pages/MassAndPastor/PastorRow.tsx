@@ -1,9 +1,10 @@
-import { useRef } from "react"
-import { Trash2 } from "lucide-react"
+import { useRef, useState } from "react"
+import { Images, Trash2 } from "lucide-react"
 import type { Control } from "react-hook-form"
 
 import { massAndPastorApi } from "@/api/massAndPastor"
 import { ImageCropModal } from "@/components/ImageCropModal"
+import { MediaPickerModal } from "@/components/MediaPickerModal"
 import { RichTextEditor } from "@/components/RichTextEditor/RichTextEditor"
 import { Button } from "@/components/ui/button"
 import {
@@ -32,6 +33,7 @@ export function PastorRow({
   canWrite: boolean
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [pickerOpen, setPickerOpen] = useState(false)
   const { imageSrc, selectFile, cancel: cancelCrop, confirm: confirmCrop, uploading, uploadError } =
     useImageCropUpload(massAndPastorApi.uploadPhoto)
 
@@ -99,6 +101,9 @@ export function PastorRow({
                 }}
                 className="text-sm file:mr-3 file:h-8 file:cursor-pointer file:rounded-lg file:border-0 file:bg-primary file:px-2.5 file:text-sm file:font-medium file:text-primary-foreground"
               />
+              <Button type="button" variant="outline" size="sm" onClick={() => setPickerOpen(true)}>
+                <Images /> Galeria
+              </Button>
               {uploading && <span className="text-sm text-muted-foreground">Przesyłanie…</span>}
             </div>
             {uploadError && <span className="text-sm text-destructive">{uploadError}</span>}
@@ -107,6 +112,11 @@ export function PastorRow({
               onCancel={cancelCrop}
               onSave={(blob) => confirmCrop(blob, field.onChange)}
               saving={uploading}
+            />
+            <MediaPickerModal
+              open={pickerOpen}
+              onClose={() => setPickerOpen(false)}
+              onSelect={field.onChange}
             />
           </div>
         )}
