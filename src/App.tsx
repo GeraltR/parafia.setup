@@ -62,6 +62,9 @@ const MassIntentionsPage = lazy(() =>
 const InformacjePage = lazy(() =>
   import("@/pages/Informacje/InformacjePage").then((m) => ({ default: m.InformacjePage }))
 )
+const MediaPage = lazy(() =>
+  import("@/pages/Media/MediaPage").then((m) => ({ default: m.MediaPage }))
+)
 
 const pageFallback = <p className="text-sm text-muted-foreground">Ładowanie…</p>
 
@@ -234,6 +237,14 @@ function App() {
                 </Suspense>
               }
             />
+            <Route
+              path="/media"
+              element={
+                <Suspense fallback={pageFallback}>
+                  <MediaPage />
+                </Suspense>
+              }
+            />
             {allNavLinks
               .filter(
                 (link) =>
@@ -254,6 +265,7 @@ function App() {
                     "/news",
                     "/mass-intentions",
                     "/informacje",
+                    "/media",
                   ].includes(link.to)
               )
               .map((link) => (

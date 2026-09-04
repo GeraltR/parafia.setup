@@ -32,6 +32,7 @@ export const navGroups: NavGroup[] = [
       { to: "/liturgia", label: "Liturgia" },
       { to: "/mass-and-pastor", label: "Msze i Duszpasterze" },
       { to: "/associations", label: "Stowarzyszenia" },
+      { to: "/media", label: "Galeria" },
     ],
   },
   {
