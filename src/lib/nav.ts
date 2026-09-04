@@ -37,7 +37,10 @@ export const navGroups: NavGroup[] = [
   },
   {
     label: "Zarządzanie",
-    items: [{ to: "/users", label: "Użytkownicy" }],
+    items: [
+      { to: "/users", label: "Użytkownicy" },
+      { to: "/stats", label: "Statystyki" },
+    ],
   },
 ]
 
