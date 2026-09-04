@@ -6,6 +6,8 @@ export interface Theme {
   fontBody: string;
   title: string;
   subtitle: string;
+  privacyPolicy: string | null;
+  accessibilityStatement: string | null;
 }
 
 export interface SocialVisibility {

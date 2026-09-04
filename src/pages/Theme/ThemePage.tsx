@@ -6,6 +6,7 @@ import { z } from "zod"
 import { themeApi } from "@/api/theme"
 import { ColorField } from "@/components/ColorField"
 import { FontSelect } from "@/components/FontSelect"
+import { RichTextEditor } from "@/components/RichTextEditor/RichTextEditor"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -29,6 +30,8 @@ const themeSchema = z.object({
   fontBody: z.string().min(1, "Wymagane"),
   title: z.string().min(1, "Wymagane"),
   subtitle: z.string().min(1, "Wymagane"),
+  privacyPolicy: z.string().nullable(),
+  accessibilityStatement: z.string().nullable(),
 })
 
 type ThemeFormValues = z.infer<typeof themeSchema>
@@ -50,6 +53,8 @@ export function ThemePage() {
       fontBody: "",
       title: "",
       subtitle: "",
+      privacyPolicy: null,
+      accessibilityStatement: null,
     },
   })
 
@@ -156,6 +161,34 @@ export function ThemePage() {
                 )}
               />
             </div>
+            <FormField
+              control={form.control}
+              name="privacyPolicy"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Informacja o przetwarzaniu danych i cookies</FormLabel>
+                  <RichTextEditor
+                    initialContent={field.value ?? ""}
+                    onChange={(html) => field.onChange(html === "" ? null : html)}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="accessibilityStatement"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Deklaracja dostępności</FormLabel>
+                  <RichTextEditor
+                    initialContent={field.value ?? ""}
+                    onChange={(html) => field.onChange(html === "" ? null : html)}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </fieldset>
           </CardContent>
           <CardFooter className="sticky bottom-0 flex items-center gap-3 bg-muted shadow-[0_-2px_8px_rgba(0,0,0,0.06)]">
