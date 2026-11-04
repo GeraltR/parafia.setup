@@ -1,11 +1,13 @@
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist"
-import pdfWorkerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url"
+import PdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?worker"
 
 import { extractPages, type ExtractProgress } from "./extractPages"
 import { blocksToHtml, layoutDocument } from "./layout"
 import type { Recognizer } from "./ocr"
 
-GlobalWorkerOptions.workerSrc = pdfWorkerUrl
+// Bundled by Vite as a .js chunk: some hosts serve .mjs with a non-JS MIME type, which
+// browsers refuse to run as a module script. Created once, shared by later imports.
+GlobalWorkerOptions.workerPort = new PdfWorker()
 
 function createCanvas(width: number, height: number): HTMLCanvasElement {
   const canvas = document.createElement("canvas")
