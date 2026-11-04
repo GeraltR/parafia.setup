@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
 import { DatePicker } from "@/components/DatePicker"
+import { UPLOADS_PENDING_LABEL, useEditorUploadsPending } from "@/components/RichTextEditor/editorUploads"
 import { RichTextEditor } from "@/components/RichTextEditor/RichTextEditor"
 import { Button } from "@/components/ui/button"
 import { CardContent, CardFooter } from "@/components/ui/card"
@@ -42,6 +43,8 @@ export function EventEditor({
   const { user } = useAuth()
   const [users, setUsers] = useState<AuthUser[]>([])
   const [error, setError] = useState<string | null>(null)
+
+  const uploadsPending = useEditorUploadsPending()
 
   const form = useForm<EventFormValues>({
     resolver: zodResolver(eventSchema),
@@ -180,8 +183,8 @@ export function EventEditor({
           {error && <p className="text-sm text-destructive">{error}</p>}
         </CardContent>
         <CardFooter className="sticky bottom-0 flex items-center gap-3 bg-muted shadow-[0_-2px_8px_rgba(0,0,0,0.06)]">
-          <Button type="submit" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? "Publikowanie…" : "Publikuj"}
+          <Button type="submit" disabled={form.formState.isSubmitting || uploadsPending}>
+            {uploadsPending ? UPLOADS_PENDING_LABEL : form.formState.isSubmitting ? "Publikowanie…" : "Publikuj"}
           </Button>
           <Button type="button" variant="outline" onClick={onCancel}>
             Anuluj

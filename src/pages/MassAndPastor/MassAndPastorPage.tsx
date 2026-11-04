@@ -11,6 +11,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
+import { UPLOADS_PENDING_LABEL, useEditorUploadsPending } from "@/components/RichTextEditor/editorUploads"
 import { useAuth } from "@/context/useAuth"
 import { useFonts } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
@@ -46,6 +47,8 @@ export function MassAndPastorPage() {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [saveError, setSaveError] = useState<string | null>(null)
   const fonts = useFonts()
+
+  const uploadsPending = useEditorUploadsPending()
 
   const form = useForm<MassAndPastorFormValues>({
     resolver: zodResolver(massAndPastorSchema),
@@ -239,8 +242,8 @@ export function MassAndPastorPage() {
           </fieldset>
           </CardContent>
           <CardFooter className="sticky bottom-0 flex items-center gap-3 bg-muted shadow-[0_-2px_8px_rgba(0,0,0,0.06)]">
-            <Button type="submit" disabled={!canWrite || form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? "Zapisywanie…" : "Zapisz"}
+            <Button type="submit" disabled={!canWrite || form.formState.isSubmitting || uploadsPending}>
+              {uploadsPending ? UPLOADS_PENDING_LABEL : form.formState.isSubmitting ? "Zapisywanie…" : "Zapisz"}
             </Button>
             {!canWrite && (
               <span className="text-sm text-muted-foreground">

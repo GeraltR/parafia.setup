@@ -63,6 +63,96 @@
   border-radius: 0.5rem;
 }
 
+/* Image alignment: floated images let the text wrap around them. */
+.content-editor,
+.rich-content {
+  display: flow-root;
+}
+
+.content-editor h1,
+.content-editor h2,
+.content-editor h3,
+.rich-content h1,
+.rich-content h2,
+.rich-content h3 {
+  clear: both;
+}
+
+.rich-content img[data-align="left"],
+.content-editor [data-resize-container]:has(img[data-align="left"]) {
+  float: left;
+  /* Stack below an earlier photo on the same side instead of squeezing the text. */
+  clear: left;
+  max-width: 60%;
+  margin: 0.25em 1.25em 0.75em 0;
+}
+
+.rich-content img[data-align="right"],
+.content-editor [data-resize-container]:has(img[data-align="right"]) {
+  float: right;
+  clear: right;
+  max-width: 60%;
+  margin: 0.25em 0 0.75em 1.25em;
+}
+
+.rich-content img[data-align="center"] {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.content-editor [data-resize-container]:has(img[data-align="center"]) {
+  justify-content: center;
+}
+
+/* Resize handles (Tiptap renders the elements, styling is up to us). */
+.content-editor [data-resize-container] {
+  margin: 0.75em 0;
+}
+
+.content-editor [data-resize-wrapper] {
+  max-width: 100%;
+}
+
+.content-editor [data-resize-wrapper] img {
+  /* The node view writes a pixel height; keep the ratio when max-width shrinks the image. */
+  height: auto !important;
+}
+
+.content-editor [data-resize-handle] {
+  width: 12px;
+  height: 12px;
+  margin: -6px;
+  border: 2px solid #fff;
+  border-radius: 2px;
+  background: #2563eb;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 1;
+}
+
+.content-editor [data-resize-handle="top-left"],
+.content-editor [data-resize-handle="bottom-right"] {
+  cursor: nwse-resize;
+}
+
+.content-editor [data-resize-handle="top-right"],
+.content-editor [data-resize-handle="bottom-left"] {
+  cursor: nesw-resize;
+}
+
+.content-editor [data-resize-container]:hover [data-resize-handle],
+.content-editor [data-resize-container].ProseMirror-selectednode [data-resize-handle],
+.content-editor [data-resize-container][data-resize-state="true"] [data-resize-handle] {
+  opacity: 1;
+}
+
+.content-editor [data-resize-container].ProseMirror-selectednode img {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
 .content-editor a,
 .rich-content a {
   text-decoration: underline;

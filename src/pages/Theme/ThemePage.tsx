@@ -6,6 +6,7 @@ import { z } from "zod"
 import { themeApi } from "@/api/theme"
 import { ColorField } from "@/components/ColorField"
 import { FontSelect } from "@/components/FontSelect"
+import { UPLOADS_PENDING_LABEL, useEditorUploadsPending } from "@/components/RichTextEditor/editorUploads"
 import { RichTextEditor } from "@/components/RichTextEditor/RichTextEditor"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -42,6 +43,8 @@ export function ThemePage() {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [saveError, setSaveError] = useState<string | null>(null)
   const fonts = useFonts()
+
+  const uploadsPending = useEditorUploadsPending()
 
   const form = useForm<ThemeFormValues>({
     resolver: zodResolver(themeSchema),
@@ -192,8 +195,8 @@ export function ThemePage() {
           </fieldset>
           </CardContent>
           <CardFooter className="sticky bottom-0 flex items-center gap-3 bg-muted shadow-[0_-2px_8px_rgba(0,0,0,0.06)]">
-            <Button type="submit" disabled={!canWrite || form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? "Zapisywanie…" : "Zapisz"}
+            <Button type="submit" disabled={!canWrite || form.formState.isSubmitting || uploadsPending}>
+              {uploadsPending ? UPLOADS_PENDING_LABEL : form.formState.isSubmitting ? "Zapisywanie…" : "Zapisz"}
             </Button>
             {!canWrite && (
               <span className="text-sm text-muted-foreground">

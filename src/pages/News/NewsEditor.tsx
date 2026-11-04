@@ -9,6 +9,7 @@ import { usersApi } from "@/api/users"
 import { DatePicker } from "@/components/DatePicker"
 import { ImageCropModal } from "@/components/ImageCropModal"
 import { MediaPickerModal } from "@/components/MediaPickerModal"
+import { UPLOADS_PENDING_LABEL, useEditorUploadsPending } from "@/components/RichTextEditor/editorUploads"
 import { RichTextEditor } from "@/components/RichTextEditor/RichTextEditor"
 import { Button } from "@/components/ui/button"
 import { CardContent, CardFooter } from "@/components/ui/card"
@@ -53,6 +54,8 @@ export function NewsEditor({
   const [previewValues, setPreviewValues] = useState<NewsFormValues | null>(null)
   const [pickerOpen, setPickerOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const uploadsPending = useEditorUploadsPending()
 
   const form = useForm<NewsFormValues>({
     resolver: zodResolver(newsSchema),
@@ -252,8 +255,8 @@ export function NewsEditor({
           {error && <p className="text-sm text-destructive">{error}</p>}
         </CardContent>
         <CardFooter className="sticky bottom-0 flex items-center gap-3 bg-muted shadow-[0_-2px_8px_rgba(0,0,0,0.06)]">
-          <Button type="submit" disabled={form.formState.isSubmitting || uploading}>
-            {form.formState.isSubmitting ? "Publikowanie…" : "Publikuj"}
+          <Button type="submit" disabled={form.formState.isSubmitting || uploading || uploadsPending}>
+            {uploadsPending ? UPLOADS_PENDING_LABEL : form.formState.isSubmitting ? "Publikowanie…" : "Publikuj"}
           </Button>
           <Button type="button" variant="outline" onClick={onCancel}>
             Anuluj

@@ -1,10 +1,13 @@
 import { useState } from "react"
-import type { Editor } from "@tiptap/react"
+import { useEditorState, type Editor } from "@tiptap/react"
 import {
   AlignCenter,
+  AlignHorizontalJustifyCenter,
   AlignLeft,
   AlignRight,
   Bold,
+  Captions,
+  FileText,
   ImagePlus,
   Images,
   Italic,
@@ -12,6 +15,9 @@ import {
   List,
   ListOrdered,
   Palette,
+  PanelLeft,
+  PanelRight,
+  RectangleHorizontal,
   Strikethrough,
   Subscript as SubscriptIcon,
   Superscript as SuperscriptIcon,
@@ -32,6 +38,8 @@ import {
 } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import { useFonts } from "@/lib/fonts"
+
+import type { ImageAlign } from "./ContentImage"
 
 const FONT_SIZES = ["12px", "14px", "16px", "18px", "20px", "24px", "28px", "32px", "40px"]
 const DEFAULT_FONT_LABEL = "Domyślna"
@@ -144,14 +152,109 @@ function ColorPopover({ editor }: { editor: Editor }) {
   )
 }
 
+const IMAGE_ALIGN_OPTIONS: { align: ImageAlign | null; title: string; icon: React.ReactNode }[] = [
+  { align: null, title: "Obraz bez opływania", icon: <RectangleHorizontal /> },
+  { align: "left", title: "Obraz po lewej, tekst opływa z prawej", icon: <PanelLeft /> },
+  { align: "center", title: "Wyśrodkuj obraz", icon: <AlignHorizontalJustifyCenter /> },
+  { align: "right", title: "Obraz po prawej, tekst opływa z lewej", icon: <PanelRight /> },
+]
+
+function ImageAltPopover({ editor, alt }: { editor: Editor; alt: string }) {
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState("")
+
+  function save() {
+    editor.chain().focus().updateAttributes("image", { alt: value.trim() || null }).run()
+    setOpen(false)
+  }
+
+  return (
+    <Popover
+      open={open}
+      onOpenChange={(next) => {
+        if (next) {
+          setValue(alt)
+        }
+        setOpen(next)
+      }}
+    >
+      <PopoverTrigger
+        type="button"
+        title="Opis obrazu (dla czytników ekranu)"
+        className={buttonVariants({ variant: alt ? "secondary" : "ghost", size: "icon-sm" })}
+      >
+        <Captions />
+      </PopoverTrigger>
+      <PopoverContent className="grid w-80 gap-2">
+        <p className="text-sm text-muted-foreground">
+          Krótko opisz, co jest na obrazie, np. „Procesja Bożego Ciała 2005”.
+        </p>
+        <Input
+          placeholder="Opis obrazu"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault()
+              save()
+            }
+          }}
+        />
+        <div className="flex justify-end">
+          <Button type="button" size="sm" onClick={save}>
+            Zapisz opis
+          </Button>
+        </div>
+      </PopoverContent>
+    </Popover>
+  )
+}
+
+/** Shown only while an image is selected. */
+function ImageButtons({ editor }: { editor: Editor }) {
+  const image = useEditorState({
+    editor,
+    selector: ({ editor }) => {
+      if (!editor.isActive("image")) return null
+      const attributes = editor.getAttributes("image")
+      return { align: (attributes.align ?? null) as ImageAlign | null, alt: (attributes.alt ?? "") as string }
+    },
+  })
+
+  if (!image) {
+    return null
+  }
+
+  return (
+    <>
+      <Separator orientation="vertical" className="mx-1 h-6" />
+      <ImageAltPopover editor={editor} alt={image.alt} />
+      {IMAGE_ALIGN_OPTIONS.map((option) => (
+        <ToolbarButton
+          key={option.align ?? "none"}
+          active={image.align === option.align}
+          title={option.title}
+          onClick={() => editor.chain().focus().setImageAlign(option.align).run()}
+        >
+          {option.icon}
+        </ToolbarButton>
+      ))}
+    </>
+  )
+}
+
 export function EditorToolbar({
   editor,
   onImageUpload,
   onOpenGallery,
+  onPdfImport,
+  pdfImporting,
 }: {
   editor: Editor
   onImageUpload: (file: File) => void
   onOpenGallery: () => void
+  onPdfImport: (file: File) => void
+  pdfImporting: boolean
 }) {
   const fonts = useFonts()
 
@@ -159,6 +262,14 @@ export function EditorToolbar({
     const file = event.target.files?.[0]
     if (file) {
       onImageUpload(file)
+    }
+    event.target.value = ""
+  }
+
+  function handlePdfInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (file) {
+      onPdfImport(file)
     }
     event.target.value = ""
   }
@@ -310,6 +421,25 @@ export function EditorToolbar({
         <Images />
       </ToolbarButton>
 
+      <label
+        title="Importuj tekst i obrazy z PDF"
+        aria-disabled={pdfImporting}
+        className={buttonVariants({
+          variant: "ghost",
+          size: "icon-sm",
+          className: pdfImporting ? "pointer-events-none opacity-50" : "cursor-pointer",
+        })}
+      >
+        <FileText />
+        <input
+          type="file"
+          accept="application/pdf"
+          className="hidden"
+          disabled={pdfImporting}
+          onChange={handlePdfInputChange}
+        />
+      </label>
+
       <ToolbarButton
         title="Wstaw tabelę"
         onClick={() =>
@@ -318,6 +448,8 @@ export function EditorToolbar({
       >
         <TableIcon />
       </ToolbarButton>
+
+      <ImageButtons editor={editor} />
     </div>
   )
 }
