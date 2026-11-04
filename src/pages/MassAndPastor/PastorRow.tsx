@@ -84,7 +84,7 @@ export function PastorRow({
         render={({ field }) => (
           <div className="grid gap-2">
             <Label>Zdjęcie</Label>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <div
                 className="size-14 shrink-0 rounded-full border bg-muted bg-cover bg-center"
                 style={field.value ? { backgroundImage: `url(${field.value})` } : undefined}

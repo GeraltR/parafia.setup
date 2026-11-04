@@ -29,7 +29,7 @@ export function StatsPage() {
   }, [days])
 
   return (
-    <Card className="max-w-3xl overflow-visible">
+    <Card className="overflow-visible">
       <CardHeader className="flex items-center justify-between">
         <CardTitle>Statystyki odwiedzin</CardTitle>
         <div className="flex gap-2">

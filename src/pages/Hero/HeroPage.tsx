@@ -114,7 +114,7 @@ export function HeroPage() {
   }
 
   return (
-    <Card className="max-w-3xl overflow-visible">
+    <Card className="overflow-visible">
       <CardHeader>
         <CardTitle>Sekcja Hero</CardTitle>
       </CardHeader>
@@ -130,7 +130,7 @@ export function HeroPage() {
                   backgroundImage ? { backgroundImage: `url(${backgroundImage})` } : undefined
                 }
               />
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <input
                   ref={fileInputRef}
                   type="file"

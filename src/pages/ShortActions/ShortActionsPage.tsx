@@ -94,7 +94,7 @@ export function ShortActionsPage() {
   }
 
   return (
-    <Card className="max-w-4xl overflow-visible">
+    <Card className="overflow-visible">
       <CardHeader>
         <CardTitle>Skróty</CardTitle>
       </CardHeader>

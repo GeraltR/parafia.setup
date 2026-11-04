@@ -87,7 +87,7 @@ export function FooterPage() {
   }
 
   return (
-    <Card className="max-w-3xl overflow-visible">
+    <Card className="overflow-visible">
       <CardHeader>
         <CardTitle>Stopka</CardTitle>
       </CardHeader>

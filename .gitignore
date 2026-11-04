@@ -29,3 +29,4 @@ dist-ssr
 *.sw?
 src/types/eksport_wordpress
 img_oryg/*.pdf
+img_oryg/*.jpg

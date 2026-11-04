@@ -54,7 +54,7 @@ export function UsersPage() {
   }
 
   return (
-    <Card className="max-w-3xl">
+    <Card>
       <CardHeader>
         <CardTitle>Użytkownicy</CardTitle>
         {isSupervisor && (

@@ -143,8 +143,8 @@ export function TopicEditor({
                       className="size-12 shrink-0 rounded-md border bg-muted bg-cover bg-center"
                       style={field.value ? { backgroundImage: `url(${field.value})` } : undefined}
                     />
-                    <div className="grid gap-1">
-                      <div className="flex items-center gap-2">
+                    <div className="grid min-w-0 gap-1">
+                      <div className="flex flex-wrap items-center gap-2">
                         <input
                           ref={iconInputRef}
                           type="file"

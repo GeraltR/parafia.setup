@@ -122,7 +122,7 @@ export function MassIntentionsPage() {
   }
 
   return (
-    <Card className="max-w-3xl overflow-visible">
+    <Card className="overflow-visible">
       <CardHeader>
         <CardTitle>Intencje mszalne</CardTitle>
       </CardHeader>

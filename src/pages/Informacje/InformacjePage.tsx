@@ -72,7 +72,7 @@ export function InformacjePage() {
   }
 
   return (
-    <Card className="max-w-3xl overflow-visible">
+    <Card className="overflow-visible">
       <CardHeader>
         <div className="flex flex-wrap items-center gap-2">
           <CardTitle>Informacje dodatkowe</CardTitle>

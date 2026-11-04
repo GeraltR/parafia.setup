@@ -90,7 +90,7 @@ export function ThemePage() {
   }
 
   return (
-    <Card className="max-w-xl overflow-visible">
+    <Card className="overflow-visible">
       <CardHeader>
         <CardTitle>Motyw strony</CardTitle>
       </CardHeader>

@@ -104,7 +104,7 @@ export function ContactAddressesPage() {
   }
 
   return (
-    <Card className="max-w-3xl overflow-visible">
+    <Card className="overflow-visible">
       <CardHeader>
         <CardTitle>Dane kontaktowe</CardTitle>
       </CardHeader>

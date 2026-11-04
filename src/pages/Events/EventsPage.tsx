@@ -72,7 +72,7 @@ export function EventsPage() {
   }
 
   return (
-    <Card className="max-w-3xl overflow-visible">
+    <Card className="overflow-visible">
       <CardHeader>
         <CardTitle>Ważne informacje</CardTitle>
         {mode.type === "list" && canWrite && (
