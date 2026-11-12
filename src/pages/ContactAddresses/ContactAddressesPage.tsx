@@ -9,6 +9,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
+import { Switch } from "@/components/ui/switch"
 import { useAuth } from "@/context/useAuth"
 import { cn } from "@/lib/utils"
 import type { ContactAddresses, SocialLinks, SocialVisibility } from "@/types/config"
@@ -25,6 +26,10 @@ function toFormValues(contact: ContactAddresses, links: SocialLinks): ContactAdd
     nip: contact.nip,
     bankAccountNumber: contact.bankAccountNumber,
     bankName: contact.bankName,
+    additionalBankIsActive: contact.additionalBankIsActive,
+    additionalBankTitle: contact.additionalBankTitle,
+    additionalBankNumber: contact.additionalBankNumber,
+    additionalBankName: contact.additionalBankName,
     social: NETWORK_KEYS.map((network) => ({
       network,
       link: links[network],
@@ -49,6 +54,10 @@ export function ContactAddressesPage() {
       nip: null,
       bankAccountNumber: null,
       bankName: null,
+      additionalBankIsActive: false,
+      additionalBankTitle: null,
+      additionalBankNumber: null,
+      additionalBankName: null,
       social: NETWORK_KEYS.map((network) => ({ network, link: "", visibility: false })),
     },
   })
@@ -84,6 +93,10 @@ export function ContactAddressesPage() {
           nip: values.nip,
           bankAccountNumber: values.bankAccountNumber,
           bankName: values.bankName,
+          additionalBankIsActive: values.additionalBankIsActive,
+          additionalBankTitle: values.additionalBankTitle,
+          additionalBankNumber: values.additionalBankNumber,
+          additionalBankName: values.additionalBankName,
           social: visibility,
         }),
         socialApi.update(links),
@@ -214,6 +227,69 @@ export function ContactAddressesPage() {
                 <FormField
                   control={form.control}
                   name="bankName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nazwa banku</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Bank Spółdzielczy"
+                          value={field.value ?? ""}
+                          onChange={(e) => field.onChange(e.target.value || null)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="grid grid-cols-[auto_1fr_1fr_1fr] items-start gap-4">
+                <FormField
+                  control={form.control}
+                  name="additionalBankIsActive"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center gap-2 space-y-0 pt-8">
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      <FormLabel className="!mt-0">Aktywny</FormLabel>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="additionalBankTitle"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Opis rachunku</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Taca inwestycyjna"
+                          value={field.value ?? ""}
+                          onChange={(e) => field.onChange(e.target.value || null)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="additionalBankNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Numer rachunku</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="00 0000 0000 0000 0000 0000 0000"
+                          value={field.value ?? ""}
+                          onChange={(e) => field.onChange(e.target.value || null)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="additionalBankName"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Nazwa banku</FormLabel>

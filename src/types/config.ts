@@ -40,6 +40,10 @@ export interface ContactAddresses {
   nip: string | null;
   bankAccountNumber: string | null;
   bankName: string | null;
+  additionalBankTitle: string | null;
+  additionalBankNumber: string | null;
+  additionalBankName: string | null;
+  additionalBankIsActive: boolean;
   social: SocialVisibility;
 }
 
